@@ -1,4 +1,4 @@
-# kirk_app
+# flutter for scavenger hunt
 
 A new Flutter project.
 
