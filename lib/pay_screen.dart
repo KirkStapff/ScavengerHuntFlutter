@@ -12,23 +12,27 @@ import 'leaderboard.dart';
 class PayScreen extends StatelessWidget {
   static const String id = "pay";
   int challengeN = 1;
+  String price = '';
+  String reward = '';
 
-  PayScreen({Key key, this.challengeN}) : super(key: key);
+  PayScreen({Key key, this.challengeN, this.price, this.reward})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
-    Future<List<Question>> getQuestions(int challenge) async{
+    Future<List<Question>> getQuestions(int challenge) async {
       print("bow");
-      var url = "http://www.tlfbermuda.com/getquestions.php?challenge="+challenge.toString();
+      var url = "http://www.tlfbermuda.com/getquestions.php?challenge=" +
+          challenge.toString();
       var resp = await http.get(url);
       var obj = json.decode(resp.body);
       ChallengeSelector.order = 1;
       print(resp.body);
       print(obj[0]["Question"]);
       List<Question> list = new List<Question>();
-      for(var q in obj){
-        list.add(new Question(q["Question"],("1".compareTo(q["TextAnswer"])) == 0));
+      for (var q in obj) {
+        list.add(
+            new Question(q["Question"], ("1".compareTo(q["TextAnswer"])) == 0));
       }
       print(list[0].question);
       return list;
@@ -62,7 +66,24 @@ class PayScreen extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0),
                           child: Text(
-                            "Pay 25",
+                            "Price: " +  "\$" + price,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 40.0,
+                              height: 1.5,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              fontFamily: font,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * .05,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30.0),
+                          child: Text(
+                            'Possible Rewards: ' + reward,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 20.0,
@@ -72,6 +93,30 @@ class PayScreen extends StatelessWidget {
                               fontFamily: font,
                             ),
                           ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * .05,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30.0),
+                          child: Text(
+                            'By clicking "Next" you consent to your credit '
+                                    'card stored on file being charged ' +
+                                price +
+                                ' dollars and understand that there is a chance '
+                                    'you may not receive a reward.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              height: 1.5,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              fontFamily: font,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * .05,
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -84,7 +129,8 @@ class PayScreen extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => QuestionScreen(questions: snapshot.data)),
+                                      builder: (context) => QuestionScreen(
+                                          questions: snapshot.data)),
                                 );
                               },
                               minWidth: 200.0,

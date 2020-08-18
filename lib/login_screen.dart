@@ -108,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: 400.0,
                       ),
                       SizedBox(
-                        height: 65,
+                        height: MediaQuery.of(context).size.height * .05,
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -124,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 100,
+                        height: MediaQuery.of(context).size.height * .08,
                       ),
                       Padding(
                           padding: EdgeInsets.symmetric(horizontal: 0.0),
@@ -144,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           )),
                       SizedBox(
-                        height: 25,
+                        height: MediaQuery.of(context).size.height * .03,
                       ),
                       TextField(
                         style: TextStyle(color: Colors.black),
@@ -163,10 +163,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 175,
+                        height: MediaQuery.of(context).size.height * .15,
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        padding: EdgeInsets.symmetric(vertical: 13.0),
                         child: Material(
                           elevation: 5.0,
                           color: Colors.blue[1000],
@@ -193,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        padding: EdgeInsets.symmetric(vertical: 0.0),
                         child: Material(
                           elevation: 5.0,
                           color: Colors.blue[1000],

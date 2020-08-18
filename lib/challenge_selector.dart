@@ -7,28 +7,35 @@ import 'dart:convert';
 import 'package:kirk_app/question_set.dart';
 import 'package:kirk_app/pay_screen.dart';
 
-class Challenge{
+class Challenge {
   int id;
   String imageLink;
   DateTime start;
   DateTime end;
-  Challenge(this.id, this.imageLink);
+  String price = "25.0";
+  String rewards = '';
 
-  String toString(){
+  Challenge(this.id, this.imageLink, this.price, this.rewards);
+
+  String toString() {
     return (id.toString() + imageLink);
   }
 }
 
 class ChallengeSelector extends StatelessWidget {
-
   static int order = 1;
   static int challengeN = 1;
 
-  Future<List<Challenge>> getChallenges() async{
+  Future<List<Challenge>> getChallenges() async {
     List<Challenge> list = new List<Challenge>();
     var resp = await http.get("http://tlfbermuda.com/getchallenges.php");
-    for(var data in json.decode(resp.body)["result"]){
-      list.add(Challenge(int.parse(data["ID"]), data["ImageLink"]));
+    for (var data in json.decode(resp.body)["result"]) {
+      list.add(Challenge(
+        int.parse(data["ID"]),
+        data["ImageLink"],
+        data["Price"],
+        data["Rewards"],
+      ));
     }
     return list;
   }
@@ -82,59 +89,92 @@ class ChallengeSelector extends StatelessWidget {
                                 children: <Widget>[
                                   Expanded(
                                       child: InkWell(
-                                        onTap: () {
-                                          ChallengeSelector.challengeN = 1;
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => PayScreen(challengeN: 1)),
-                                          );
-                                        },
-                                        child: Image.network(snapshot.data[0].imageLink,
-                                            width: 175, height: 200, fit: BoxFit.fill),
-                                      )),
+                                    onTap: () {
+                                      ChallengeSelector.challengeN = 1;
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => PayScreen(
+                                                  challengeN: 1,
+                                                  price: snapshot.data[0].price,
+                                                  reward:
+                                                      snapshot.data[0].rewards,
+                                                )),
+                                      );
+                                    },
+                                    child: Image.network(
+                                        snapshot.data[0].imageLink,
+                                        width: 175,
+                                        height: 200,
+                                        fit: BoxFit.fill),
+                                  )),
                                   Expanded(
                                       child: InkWell(
-                                        onTap: () {
-                                          ChallengeSelector.challengeN = 2;
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => PayScreen(challengeN: 2,)),
-                                          );},
-                                        child: Image.network(snapshot.data[1].imageLink,
-                                            width: 175, height: 200, fit: BoxFit.fill),
-                                      )),
+                                    onTap: () {
+                                      ChallengeSelector.challengeN = 2;
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => PayScreen(
+                                                  challengeN: 2,
+                                                  price: snapshot.data[1].price,
+                                                  reward:
+                                                      snapshot.data[1].rewards,
+                                                )),
+                                      );
+                                    },
+                                    child: Image.network(
+                                        snapshot.data[1].imageLink,
+                                        width: 175,
+                                        height: 200,
+                                        fit: BoxFit.fill),
+                                  )),
                                 ]),
                             Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Expanded(
                                       child: InkWell(
-                                        onTap: () {
-                                          ChallengeSelector.challengeN = 3;
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => PayScreen(challengeN: 3)),
-                                          );
-                                        },
-                                        child: Image.network(snapshot.data[2].imageLink,
-                                            width: 175, height: 200, fit: BoxFit.fill),
-                                      )),
+                                    onTap: () {
+                                      ChallengeSelector.challengeN = 3;
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => PayScreen(
+                                                  challengeN: 3,
+                                                  price: snapshot.data[2].price,
+                                                  reward:
+                                                      snapshot.data[2].rewards,
+                                                )),
+                                      );
+                                    },
+                                    child: Image.network(
+                                        snapshot.data[2].imageLink,
+                                        width: 175,
+                                        height: 200,
+                                        fit: BoxFit.fill),
+                                  )),
                                   Expanded(
                                       child: InkWell(
-                                        onTap: () {
-                                          ChallengeSelector.challengeN = 4;
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => PayScreen(challengeN: 4)),
-                                          );
-                                        },
-                                        child: Image.network(snapshot.data[3].imageLink,
-                                            width: 175, height: 200, fit: BoxFit.fill),
-                                      )),
+                                    onTap: () {
+                                      ChallengeSelector.challengeN = 4;
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => PayScreen(
+                                                  challengeN: 4,
+                                                  price: snapshot.data[3].price,
+                                                  reward:
+                                                      snapshot.data[3].rewards,
+                                                )),
+                                      );
+                                    },
+                                    child: Image.network(
+                                        snapshot.data[3].imageLink,
+                                        width: 175,
+                                        height: 200,
+                                        fit: BoxFit.fill),
+                                  )),
                                 ]),
                             SizedBox(
                               height: 40,
@@ -156,10 +196,6 @@ class ChallengeSelector extends StatelessWidget {
                           ],
                         );
                       }
-                    }
-                )
-            )
-        )
-    );
+                    }))));
   }
 }
