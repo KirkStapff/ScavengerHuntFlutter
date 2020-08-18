@@ -8,6 +8,7 @@ class Instructions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        height: MediaQuery.of(context).size.height,
         color: Colors.white,
         padding: EdgeInsets.symmetric(
           horizontal: 24.0,
@@ -112,7 +113,7 @@ class Instructions extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 30.0),
                 child: Text(
                   '5. The team who finishes fastest with the most correct answers'
-                      ' wins',
+                  ' wins',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
