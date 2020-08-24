@@ -19,7 +19,6 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     Future<void> _showMyDialog() async {
       return showDialog<void>(
         context: context,
@@ -52,9 +51,9 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
         body: Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("images/fullscreen.png"),
-                  fit: BoxFit.cover,
-                )),
+              image: AssetImage("images/fullscreen.png"),
+              fit: BoxFit.cover,
+            )),
             height: MediaQuery.of(context).size.height,
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * .04,
@@ -64,69 +63,71 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .045,
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .045,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * .06),
+                    child: Text(
+                      'Forgot My Password',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: .105 * MediaQuery.of(context).size.width,
+                        fontFamily: 'Carter One',
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: MediaQuery.of(context).size.width * .06),
-                        child: Text(
-                          'Forgot My Password',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: .105 * MediaQuery.of(context).size.width,
-                            fontFamily: 'Carter One',
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .05,
-                      ),
-                      Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 0.0),
-                          child: TextField(
-                            style: TextStyle(color: Colors.black),
-                            controller: emailTextController,
-                            onChanged: (value) {
-                              eMail = value;
-                            },
-                            decoration: InputDecoration(
-                              hintText: "Enter your email address",
-                              hintStyle: TextStyle(color: Colors.black),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(width: 1.5),
-                                  borderRadius:
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .05,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 0.0),
+                      child: TextField(
+                        style: TextStyle(color: Colors.black),
+                        controller: emailTextController,
+                        onChanged: (value) {
+                          eMail = value;
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Enter your email address",
+                          hintStyle: TextStyle(
+                              color: Colors.black,
+                              height: MediaQuery.of(context).size.width * .004),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(width: 1.5),
+                              borderRadius:
                                   const BorderRadius.all(Radius.circular(1.0))),
-                            ),
-                          )),
-                      SizedBox(
+                        ),
+                      )),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .05,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 0.0),
+                    child: Material(
+                      elevation: 5.0,
+                      color: Colors.blue[1000],
+                      borderRadius: BorderRadius.circular(60.0),
+                      child: MaterialButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, ForgotPassScreen2.id);
+                        },
+                        minWidth: MediaQuery.of(context).size.width * .5,
                         height: MediaQuery.of(context).size.height * .05,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 0.0),
-                        child: Material(
-                          elevation: 5.0,
-                          color: Colors.blue[1000],
-                          borderRadius: BorderRadius.circular(60.0),
-                          child: MaterialButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, ForgotPassScreen2.id);
-                            },
-                            minWidth: MediaQuery.of(context).size.width * .5,
-                            height: MediaQuery.of(context).size.height * .05,
-                            child: Text(
-                              'Get Code',
-                              style: TextStyle(
-                                fontSize: .045 * MediaQuery.of(context).size.width,
-                                fontFamily: font,
-                                color: Colors.red[200],
-                              ),
-                            ),
+                        child: Text(
+                          'Get Code',
+                          style: TextStyle(
+                            fontSize: .045 * MediaQuery.of(context).size.width,
+                            fontFamily: font,
+                            color: Colors.red[200],
                           ),
                         ),
                       ),
-                    ]))));
+                    ),
+                  ),
+                ]))));
   }
 }

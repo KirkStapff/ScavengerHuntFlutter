@@ -55,9 +55,9 @@ class _ForgotPassScreen2State extends State<ForgotPassScreen2> {
         body: Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("images/fullscreen.png"),
-                  fit: BoxFit.cover,
-                )),
+              image: AssetImage("images/fullscreen.png"),
+              fit: BoxFit.cover,
+            )),
             height: MediaQuery.of(context).size.height,
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * .04,
@@ -67,116 +67,122 @@ class _ForgotPassScreen2State extends State<ForgotPassScreen2> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .045,
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .045,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * .06),
+                    child: Text(
+                      'Forgot My Password',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: .105 * MediaQuery.of(context).size.width,
+                        fontFamily: 'Carter One',
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: MediaQuery.of(context).size.width * .06),
-                        child: Text(
-                          'Forgot My Password',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: .105 * MediaQuery.of(context).size.width,
-                            fontFamily: 'Carter One',
-                            fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .05,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 0.0),
+                      child: TextField(
+                        style: TextStyle(
                             color: Colors.black,
+                            height: MediaQuery.of(context).size.width * .004),
+                        controller: codeTextController,
+                        onChanged: (value) {
+                          code = value;
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Enter the code sent to your email",
+                          hintStyle: TextStyle(color: Colors.black),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(width: 1.5),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(1.0))),
+                        ),
+                      )),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .03,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 0.0),
+                      child: TextField(
+                        obscureText: true,
+                        style: TextStyle(
+                            color: Colors.black,
+                            height: MediaQuery.of(context).size.width * .004),
+                        controller: passTextController,
+                        onChanged: (value) {
+                          pass = value;
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Enter your new password",
+                          hintStyle: TextStyle(color: Colors.black),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(width: 1.5),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(1.0))),
+                        ),
+                      )),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .03,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 0.0),
+                      child: TextField(
+                        obscureText: true,
+                        style: TextStyle(
+                            color: Colors.black,
+                            height: MediaQuery.of(context).size.width * .004),
+                        controller: vPassTextController,
+                        onChanged: (value) {
+                          vPass = value;
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Verify your new password",
+                          hintStyle: TextStyle(color: Colors.black),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(width: 1.5),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(1.0))),
+                        ),
+                      )),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .05,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 0.0),
+                    child: Material(
+                      elevation: 5.0,
+                      color: Colors.blue[1000],
+                      borderRadius: BorderRadius.circular(60.0),
+                      child: MaterialButton(
+                        onPressed: () {
+                          errorFree = (pass.length > 3 && pass == vPass);
+                          if (errorFree) {
+                            Navigator.pushNamed(context, LoginScreen.id);
+                          } else {
+                            _showMyDialog();
+                          }
+                        },
+                        minWidth: MediaQuery.of(context).size.width * .5,
+                        height: MediaQuery.of(context).size.height * .05,
+                        child: Text(
+                          'Submit',
+                          style: TextStyle(
+                            fontSize: .045 * MediaQuery.of(context).size.width,
+                            fontFamily: font,
+                            color: Colors.red[200],
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .05,
-                      ),
-                      Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 0.0),
-                          child: TextField(
-                            style: TextStyle(color: Colors.black),
-                            controller: codeTextController,
-                            onChanged: (value) {
-                              code = value;
-                            },
-                            decoration: InputDecoration(
-                              hintText: "Enter the code sent to your email",
-                              hintStyle: TextStyle(color: Colors.black),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(width: 1.5),
-                                  borderRadius:
-                                  const BorderRadius.all(Radius.circular(1.0))),
-                            ),
-                          )),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .03,
-                      ),
-                      Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 0.0),
-                          child: TextField(
-                            obscureText: true,
-                            style: TextStyle(color: Colors.black),
-                            controller: passTextController,
-                            onChanged: (value) {
-                              pass = value;
-                            },
-                            decoration: InputDecoration(
-                              hintText: "Enter your new password",
-                              hintStyle: TextStyle(color: Colors.black),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(width: 1.5),
-                                  borderRadius:
-                                  const BorderRadius.all(Radius.circular(1.0))),
-                            ),
-                          )),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .03,
-                      ),
-                      Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 0.0),
-                          child: TextField(
-                            obscureText: true,
-                            style: TextStyle(color: Colors.black),
-                            controller: vPassTextController,
-                            onChanged: (value) {
-                              vPass = value;
-                            },
-                            decoration: InputDecoration(
-                              hintText: "Verify your new password",
-                              hintStyle: TextStyle(color: Colors.black),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(width: 1.5),
-                                  borderRadius:
-                                  const BorderRadius.all(Radius.circular(1.0))),
-                            ),
-                          )),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .05,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 0.0),
-                        child: Material(
-                          elevation: 5.0,
-                          color: Colors.blue[1000],
-                          borderRadius: BorderRadius.circular(60.0),
-                          child: MaterialButton(
-                            onPressed: () {
-                              errorFree = (pass.length > 3 && pass == vPass);
-                              if (errorFree) {
-                                Navigator.pushNamed(context, LoginScreen.id);
-                              } else {
-                                _showMyDialog();
-                              }
-                            },
-                            minWidth: MediaQuery.of(context).size.width * .5,
-                            height: MediaQuery.of(context).size.height * .05,
-                            child: Text(
-                              'Submit',
-                              style: TextStyle(
-                                fontSize: .045 * MediaQuery.of(context).size.width,
-                                fontFamily: font,
-                                color: Colors.red[200],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ]))));
+                    ),
+                  ),
+                ]))));
   }
 }

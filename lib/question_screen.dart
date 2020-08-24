@@ -93,7 +93,7 @@ class QuestionScreen extends StatelessWidget {
                       child: Visibility(
                         visible: questions[ChallengeSelector.order - 1].textAnswer,
                         child: TextField(
-                          maxLines: 5,
+                          maxLines: 12,
                           style: TextStyle(color: Colors.black),
                           controller: textAnswerController,
                           onChanged: (value) {
@@ -104,7 +104,7 @@ class QuestionScreen extends StatelessWidget {
                             filled: true,
                             hintText: "Enter your answer here",
                             hintStyle: TextStyle(
-                              color: Colors.black,
+                              color: Colors.black, height: MediaQuery.of(context).size.width * .004
                             ),
                             enabledBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(),

@@ -12,7 +12,7 @@ import 'package:kirk_app/style_constants.dart';
 import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 
-class Account{
+class Account {
   String first;
   String last;
   String team_name;
@@ -65,37 +65,55 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     Future registerAccount(BuildContext buildContext, Account account) async {
-
       SecurityContext context = SecurityContext.defaultContext;
 
       ByteData file = await rootBundle.load('cert/WebCertificate.pem');
-      if(false)
+      if (false)
         context.setTrustedCertificatesBytes(file.buffer.asUint8List()); //ca.crt
 
       file = await rootBundle.load('cert/UserCertificate.pem');
-      context.useCertificateChainBytes(file.buffer.asUint8List());//client.crt
+      context.useCertificateChainBytes(file.buffer.asUint8List()); //client.crt
 
       file = await rootBundle.load('cert/PrivateKey.pem');
-      context.usePrivateKeyBytes(file.buffer.asUint8List(), password:'PinkForLife');//client.key
+      context.usePrivateKeyBytes(file.buffer.asUint8List(),
+          password: 'PinkForLife'); //client.key
 
       var client = HttpClient(context: context);
-      client.badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
 
       // The rest of this code comes from your question.
       var uri = "https://tlfbermuda.com/register.php";
 
-      const Base64Codec base64 = Base64Codec(); const Latin1Codec latin1 = Latin1Codec();
-      var appKey = '["'+account.first+'","' +account.last+'","'
-          +account.team_name+'","'+account.password+'","'
-          +account.email+'","'+account.tel+'","'+account.credit+'","' +account.CVV+'","'
-          +account.expMon+'","'+account.expYear+'"]';
+      const Base64Codec base64 = Base64Codec();
+      const Latin1Codec latin1 = Latin1Codec();
+      var appKey = '["' +
+          account.first +
+          '","' +
+          account.last +
+          '","' +
+          account.team_name +
+          '","' +
+          account.password +
+          '","' +
+          account.email +
+          '","' +
+          account.tel +
+          '","' +
+          account.credit +
+          '","' +
+          account.CVV +
+          '","' +
+          account.expMon +
+          '","' +
+          account.expYear +
+          '"]';
       //var bytes = latin1.encode(appKey);
       //appKey = base64.encode(bytes);
       var method = 'POST';
 
-      var request = await client.openUrl(method,Uri.parse(uri));
+      var request = await client.openUrl(method, Uri.parse(uri));
       request.headers.contentLength = 0;
       request.headers.set(HttpHeaders.authorizationHeader,
           base64.encode(latin1.encode(appKey)));
@@ -103,7 +121,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       var response = await request.close();
       var textBack = new List<int>();
       textBack.addAll(await response.first);
-      while(textBack.length % 4 != 0){
+      while (textBack.length % 4 != 0) {
         textBack.add(0);
       }
       print(latin1.decode(textBack));
@@ -150,10 +168,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       body: Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("images/fullscreen.png"),
-              fit: BoxFit.cover,
-            )
-        ),
+          image: AssetImage("images/fullscreen.png"),
+          fit: BoxFit.cover,
+        )),
         height: MediaQuery.of(context).size.height,
         padding: EdgeInsets.symmetric(
           horizontal: 0.0,
@@ -191,39 +208,43 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       children: <Widget>[
                         Expanded(
                             child: TextField(
-                              style: TextStyle(color: Colors.black),
-                              controller: firstNameTextController,
-                              onChanged: (value) {
-                                firstName = value;
-                              },
-                              decoration: InputDecoration(
-                                hintText: "Enter first name",
-                                hintStyle: TextStyle(color: Colors.black),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(width: 1.5),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(1.0))),
-                              ),
-                            )),
+                          style: TextStyle(
+                              color: Colors.black,
+                              height: MediaQuery.of(context).size.width * .004),
+                          controller: firstNameTextController,
+                          onChanged: (value) {
+                            firstName = value;
+                          },
+                          decoration: InputDecoration(
+                            hintText: "Enter first name",
+                            hintStyle: TextStyle(color: Colors.black),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(width: 1.5),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(1.0))),
+                          ),
+                        )),
                         SizedBox(
                           width: 20,
                         ),
                         Expanded(
                             child: TextField(
-                              style: TextStyle(color: Colors.black),
-                              controller: lastNameTextController,
-                              onChanged: (value) {
-                                lastName = value;
-                              },
-                              decoration: InputDecoration(
-                                hintText: "Enter last name here",
-                                hintStyle: TextStyle(color: Colors.black),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(width: 1.5),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(1.0))),
-                              ),
-                            )),
+                          style: TextStyle(
+                              color: Colors.black,
+                              height: MediaQuery.of(context).size.width * .004),
+                          controller: lastNameTextController,
+                          onChanged: (value) {
+                            lastName = value;
+                          },
+                          decoration: InputDecoration(
+                            hintText: "Enter last name here",
+                            hintStyle: TextStyle(color: Colors.black),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(width: 1.5),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(1.0))),
+                          ),
+                        )),
                       ])),
               SizedBox(
                 height: MediaQuery.of(context).size.height * .01,
@@ -232,7 +253,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   padding: EdgeInsets.symmetric(
                       horizontal: MediaQuery.of(context).size.width * .04),
                   child: TextField(
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(
+                        color: Colors.black,
+                        height: MediaQuery.of(context).size.width * .004),
                     controller: teamNameTextController,
                     onChanged: (value) {
                       teamName = value;
@@ -245,7 +268,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(width: 1.5),
                           borderRadius:
-                          const BorderRadius.all(Radius.circular(1.0))),
+                              const BorderRadius.all(Radius.circular(1.0))),
                     ),
                   )),
               SizedBox(
@@ -255,7 +278,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   padding: EdgeInsets.symmetric(
                       horizontal: MediaQuery.of(context).size.width * .04),
                   child: TextField(
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(
+                        color: Colors.black,
+                        height: MediaQuery.of(context).size.width * .004),
                     controller: eMailTextController,
                     onChanged: (value) {
                       eMail = value;
@@ -266,7 +291,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(width: 1.5),
                           borderRadius:
-                          const BorderRadius.all(Radius.circular(1.0))),
+                              const BorderRadius.all(Radius.circular(1.0))),
                     ),
                   )),
               SizedBox(
@@ -280,41 +305,45 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       children: <Widget>[
                         Expanded(
                             child: TextField(
-                              style: TextStyle(color: Colors.black),
-                              obscureText: true,
-                              controller: passTextController,
-                              onChanged: (value) {
-                                pass = value;
-                              },
-                              decoration: InputDecoration(
-                                hintText: "Enter password",
-                                hintStyle: TextStyle(color: Colors.black),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(width: 1.5),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(1.0))),
-                              ),
-                            )),
+                          style: TextStyle(
+                              color: Colors.black,
+                              height: MediaQuery.of(context).size.width * .004),
+                          obscureText: true,
+                          controller: passTextController,
+                          onChanged: (value) {
+                            pass = value;
+                          },
+                          decoration: InputDecoration(
+                            hintText: "Enter password",
+                            hintStyle: TextStyle(color: Colors.black),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(width: 1.5),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(1.0))),
+                          ),
+                        )),
                         SizedBox(
                           width: 20,
                         ),
                         Expanded(
                             child: TextField(
-                              style: TextStyle(color: Colors.black),
-                              obscureText: true,
-                              controller: vPassTextController,
-                              onChanged: (value) {
-                                vPass = value;
-                              },
-                              decoration: InputDecoration(
-                                hintText: "Re-enter password",
-                                hintStyle: TextStyle(color: Colors.black),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(width: 1.5),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(1.0))),
-                              ),
-                            )),
+                          style: TextStyle(
+                              color: Colors.black,
+                              height: MediaQuery.of(context).size.width * .004),
+                          obscureText: true,
+                          controller: vPassTextController,
+                          onChanged: (value) {
+                            vPass = value;
+                          },
+                          decoration: InputDecoration(
+                            hintText: "Re-enter password",
+                            hintStyle: TextStyle(color: Colors.black),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(width: 1.5),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(1.0))),
+                          ),
+                        )),
                       ])),
               SizedBox(
                 height: MediaQuery.of(context).size.height * .01,
@@ -323,7 +352,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   padding: EdgeInsets.symmetric(
                       horizontal: MediaQuery.of(context).size.width * .04),
                   child: TextField(
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(
+                        color: Colors.black,
+                        height: MediaQuery.of(context).size.width * .004),
                     controller: telTextController,
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
@@ -339,7 +370,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(width: 1.5),
                           borderRadius:
-                          const BorderRadius.all(Radius.circular(1.0))),
+                              const BorderRadius.all(Radius.circular(1.0))),
                     ),
                   )),
               SizedBox(
@@ -349,7 +380,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   padding: EdgeInsets.symmetric(
                       horizontal: MediaQuery.of(context).size.width * .04),
                   child: TextField(
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(
+                        color: Colors.black,
+                        height: MediaQuery.of(context).size.width * .004),
                     controller: cardNumberTextController,
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
@@ -365,7 +398,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(width: 1.5),
                           borderRadius:
-                          const BorderRadius.all(Radius.circular(1.0))),
+                              const BorderRadius.all(Radius.circular(1.0))),
                     ),
                   )),
               SizedBox(
@@ -379,73 +412,79 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       children: <Widget>[
                         Expanded(
                             child: TextField(
-                              style: TextStyle(color: Colors.black),
-                              controller: expMonthTextController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: <TextInputFormatter>[
-                                WhitelistingTextInputFormatter.digitsOnly,
-                                LengthLimitingTextInputFormatter(2)
-                              ],
-                              onChanged: (value) {
-                                expMonth = value;
-                              },
-                              decoration: InputDecoration(
-                                hintText: "Exp. Month",
-                                hintStyle: TextStyle(color: Colors.black),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(width: 1.5),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(1.0))),
-                              ),
-                            )),
+                          style: TextStyle(
+                              color: Colors.black,
+                              height: MediaQuery.of(context).size.width * .004),
+                          controller: expMonthTextController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            WhitelistingTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(2)
+                          ],
+                          onChanged: (value) {
+                            expMonth = value;
+                          },
+                          decoration: InputDecoration(
+                            hintText: "Exp. Month",
+                            hintStyle: TextStyle(color: Colors.black),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(width: 1.5),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(1.0))),
+                          ),
+                        )),
                         SizedBox(
                           width: 20,
                         ),
                         Expanded(
                             child: TextField(
-                              style: TextStyle(color: Colors.black),
-                              controller: expYearTextController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: <TextInputFormatter>[
-                                WhitelistingTextInputFormatter.digitsOnly,
-                                LengthLimitingTextInputFormatter(2)
-                              ],
-                              onChanged: (value) {
-                                expYear = value;
-                              },
-                              decoration: InputDecoration(
-                                hintText: "Exp. Year",
-                                hintStyle: TextStyle(color: Colors.black),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(width: 1.5),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(1.0))),
-                              ),
-                            )),
+                          style: TextStyle(
+                              color: Colors.black,
+                              height: MediaQuery.of(context).size.width * .004),
+                          controller: expYearTextController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            WhitelistingTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(2)
+                          ],
+                          onChanged: (value) {
+                            expYear = value;
+                          },
+                          decoration: InputDecoration(
+                            hintText: "Exp. Year",
+                            hintStyle: TextStyle(color: Colors.black),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(width: 1.5),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(1.0))),
+                          ),
+                        )),
                         SizedBox(
                           width: 20,
                         ),
                         Expanded(
                             child: TextField(
-                              style: TextStyle(color: Colors.black),
-                              controller: cvvTextController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: <TextInputFormatter>[
-                                WhitelistingTextInputFormatter.digitsOnly,
-                                LengthLimitingTextInputFormatter(3)
-                              ],
-                              onChanged: (value) {
-                                cvv = value;
-                              },
-                              decoration: InputDecoration(
-                                hintText: "CVV",
-                                hintStyle: TextStyle(color: Colors.black),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(width: 1.5),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(1.0))),
-                              ),
-                            )),
+                          style: TextStyle(
+                              color: Colors.black,
+                              height: MediaQuery.of(context).size.width * .004),
+                          controller: cvvTextController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            WhitelistingTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(3)
+                          ],
+                          onChanged: (value) {
+                            cvv = value;
+                          },
+                          decoration: InputDecoration(
+                            hintText: "CVV",
+                            hintStyle: TextStyle(color: Colors.black),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(width: 1.5),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(1.0))),
+                          ),
+                        )),
                       ])),
               SizedBox(
                 height: MediaQuery.of(context).size.height * .02,
@@ -503,29 +542,29 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         activeColor: Colors.green,
                         title: RichText(
                             text: TextSpan(children: [
-                              TextSpan(
-                                  text:
+                          TextSpan(
+                              text:
                                   "By ticking this box you agree to have your credit card"
-                                      "info securely stored by Island Hunt and agree to our ",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontFamily: font,
-                                    color: Colors.black,
-                                  )),
-                              TextSpan(
-                                text: 'privacy policy',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontFamily: font,
-                                  fontStyle: FontStyle.italic,
-                                  color: Colors.blue,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    _launchURL();
-                                  },
-                              ),
-                            ])),
+                                  "info securely stored by Island Hunt and agree to our ",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: font,
+                                color: Colors.black,
+                              )),
+                          TextSpan(
+                            text: 'privacy policy',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontFamily: font,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.blue,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                _launchURL();
+                              },
+                          ),
+                        ])),
                         value: checkedValue,
                         onChanged: (newValue) {
                           setState(() {

@@ -14,6 +14,7 @@ class LoginScreen extends StatefulWidget {
   static String teamname;
   static String account_id;
   static SecurityContext sec_context;
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -59,40 +60,42 @@ class _LoginScreenState extends State<LoginScreen> {
       LoginScreen.sec_context = SecurityContext.defaultContext;
 
       ByteData file = await rootBundle.load('cert/WebCertificate.pem');
-      if(false)
-        LoginScreen.sec_context.setTrustedCertificatesBytes(file.buffer.asUint8List()); //ca.crt
+      if (false)
+        LoginScreen.sec_context
+            .setTrustedCertificatesBytes(file.buffer.asUint8List()); //ca.crt
 
       file = await rootBundle.load('cert/UserCertificate.pem');
-      LoginScreen.sec_context.useCertificateChainBytes(file.buffer.asUint8List());//client.crt
+      LoginScreen.sec_context
+          .useCertificateChainBytes(file.buffer.asUint8List()); //client.crt
 
       file = await rootBundle.load('cert/PrivateKey.pem');
-      LoginScreen.sec_context.usePrivateKeyBytes(file.buffer.asUint8List(), password:'PinkForLife');//client.key
+      LoginScreen.sec_context.usePrivateKeyBytes(file.buffer.asUint8List(),
+          password: 'PinkForLife'); //client.key
       var client = HttpClient(context: LoginScreen.sec_context);
-      client.badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
       // The rest of this code comes from your question.
       var uri = "https://tlfbermuda.com/login.php";
       const Latin1Codec latin1 = Latin1Codec();
-      var appKey = '["'+teamname+'","'+pass+'"]';
+      var appKey = '["' + teamname + '","' + pass + '"]';
       //var bytes = latin1.encode(appKey);
       //appKey = base64.encode(bytes);
       var method = 'GET';
       print("1");
-      var request = await client.openUrl(method,Uri.parse(uri));
+      var request = await client.openUrl(method, Uri.parse(uri));
       request.headers.contentLength = 0;
-      request.headers.set(HttpHeaders.authorizationHeader,
-          appKey);
+      request.headers.set(HttpHeaders.authorizationHeader, appKey);
       //request.write(data);
       var response = await request.close();
       var textBack = new List<int>();
       textBack.addAll(await response.first);
       var success = utf8.decode(textBack);
-      if(success.compareTo("0")==0){
+      if (success.compareTo("0") == 0) {
         _showMyDialog();
-      }else{
+      } else {
         print("ding");
         LoginScreen.account_id = utf8.decode(textBack);
-        Navigator.of(buildContext)
-            .push(MaterialPageRoute(builder: (context) {
+        Navigator.of(buildContext).push(MaterialPageRoute(builder: (context) {
           return Instructions();
         }));
       }
@@ -102,9 +105,9 @@ class _LoginScreenState extends State<LoginScreen> {
         body: Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("images/fullscreen.png"),
-                  fit: BoxFit.cover,
-                )),
+              image: AssetImage("images/fullscreen.png"),
+              fit: BoxFit.cover,
+            )),
             height: MediaQuery.of(context).size.height,
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * .04,
@@ -114,48 +117,54 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .045,
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .045,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * .06),
+                    child: Text(
+                      'Island Hunt',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: .105 * MediaQuery.of(context).size.width,
+                        fontFamily: 'Carter One',
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: MediaQuery.of(context).size.width * .06),
-                        child: Text(
-                          'Island Hunt',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: .105 * MediaQuery.of(context).size.width,
-                            fontFamily: 'Carter One',
-                            fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .08,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 0.0),
+                      child: TextField(
+                        style: TextStyle(
                             color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .08,
-                      ),
-                      Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 0.0),
-                          child: TextField(
-                            style: TextStyle(color: Colors.black),
-                            controller: emailTextController,
-                            onChanged: (value) {
-                              teamname = value;
-                            },
-                            decoration: InputDecoration(
-                              hintText: "Enter your team name",
-                              hintStyle: TextStyle(color: Colors.black),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(width: 1.5),
-                                  borderRadius:
+                            height: MediaQuery.of(context).size.width * .004),
+                        controller: emailTextController,
+                        onChanged: (value) {
+                          teamname = value;
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Enter your team name",
+                          hintStyle: TextStyle(color: Colors.black),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(width: 1.5),
+                              borderRadius:
                                   const BorderRadius.all(Radius.circular(1.0))),
-                            ),
-                          )),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .03,
-                      ),
-                      TextField(
-                        style: TextStyle(color: Colors.black),
+                        ),
+                      )),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .03,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 0.0),
+                      child: TextField(
+                        style: TextStyle(
+                            color: Colors.black,
+                            height: MediaQuery.of(context).size.width * .004),
                         obscureText: true,
                         controller: passWordTextController,
                         onChanged: (value) {
@@ -163,94 +172,96 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         decoration: InputDecoration(
                           hintText: "Enter password",
-                          hintStyle: TextStyle(color: Colors.black),
+                          hintStyle: TextStyle(
+                              color: Colors.black,
+                              height: MediaQuery.of(context).size.width * .004),
                           enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(width: 1.5),
                               borderRadius:
-                              const BorderRadius.all(Radius.circular(1.0))),
+                                  const BorderRadius.all(Radius.circular(1.0))),
                         ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .15,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 0.0),
-                        child: Material(
-                          elevation: 5.0,
-                          color: Colors.blue[1000],
-                          borderRadius: BorderRadius.circular(60.0),
-                          child: MaterialButton(
-                            onPressed: () {
-                              loginAccount(context);
-                            },
-                            minWidth: MediaQuery.of(context).size.width * .5,
-                            height: MediaQuery.of(context).size.height * .05,
-                            child: Text(
-                              'Login',
-                              style: TextStyle(
-                                fontSize: .045 * MediaQuery.of(context).size.width,
-                                fontFamily: font,
-                                color: Colors.red[200],
-                              ),
-                            ),
+                      )),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .15,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 0.0),
+                    child: Material(
+                      elevation: 5.0,
+                      color: Colors.blue[1000],
+                      borderRadius: BorderRadius.circular(60.0),
+                      child: MaterialButton(
+                        onPressed: () {
+                          loginAccount(context);
+                        },
+                        minWidth: MediaQuery.of(context).size.width * .5,
+                        height: MediaQuery.of(context).size.height * .05,
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            fontSize: .045 * MediaQuery.of(context).size.width,
+                            fontFamily: font,
+                            color: Colors.red[200],
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .018,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 0.0),
-                        child: Material(
-                          elevation: 5.0,
-                          color: Colors.blue[1000],
-                          borderRadius: BorderRadius.circular(60.0),
-                          child: MaterialButton(
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return CreateAccountScreen();
-                              }));
-                            },
-                            minWidth: MediaQuery.of(context).size.width * .5,
-                            height: MediaQuery.of(context).size.height * .05,
-                            child: Text(
-                              'Register',
-                              style: TextStyle(
-                                fontSize: .045 * MediaQuery.of(context).size.width,
-                                fontFamily: font,
-                                color: Colors.red[200],
-                              ),
-                            ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .018,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 0.0),
+                    child: Material(
+                      elevation: 5.0,
+                      color: Colors.blue[1000],
+                      borderRadius: BorderRadius.circular(60.0),
+                      child: MaterialButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return CreateAccountScreen();
+                          }));
+                        },
+                        minWidth: MediaQuery.of(context).size.width * .5,
+                        height: MediaQuery.of(context).size.height * .05,
+                        child: Text(
+                          'Register',
+                          style: TextStyle(
+                            fontSize: .045 * MediaQuery.of(context).size.width,
+                            fontFamily: font,
+                            color: Colors.red[200],
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .018,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 0.0),
-                        child: Material(
-                          elevation: 5.0,
-                          color: Colors.blue[1000],
-                          borderRadius: BorderRadius.circular(60.0),
-                          child: MaterialButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, ForgotPassScreen.id);
-                            },
-                            minWidth: MediaQuery.of(context).size.width * .5,
-                            height: MediaQuery.of(context).size.height * .05,
-                            child: Text(
-                              'Forgot My Password',
-                              style: TextStyle(
-                                fontSize: .045 * MediaQuery.of(context).size.width,
-                                fontFamily: font,
-                                color: Colors.red[200],
-                              ),
-                            ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .018,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 0.0),
+                    child: Material(
+                      elevation: 5.0,
+                      color: Colors.blue[1000],
+                      borderRadius: BorderRadius.circular(60.0),
+                      child: MaterialButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, ForgotPassScreen.id);
+                        },
+                        minWidth: MediaQuery.of(context).size.width * .5,
+                        height: MediaQuery.of(context).size.height * .05,
+                        child: Text(
+                          'Forgot My Password',
+                          style: TextStyle(
+                            fontSize: .045 * MediaQuery.of(context).size.width,
+                            fontFamily: font,
+                            color: Colors.red[200],
                           ),
                         ),
                       ),
-                    ]))));
+                    ),
+                  ),
+                ]))));
   }
 }
