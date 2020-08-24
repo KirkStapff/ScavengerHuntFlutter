@@ -4,90 +4,124 @@ import 'package:kirk_app/style_constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:kirk_app/challenge_selector.dart';
+import 'package:kirk_app/login_screen.dart';
+import 'dart:io';
 
-class Person{
+class Person {
   String name;
   int score;
+  int pos;
 
-  Person(name, score){
-    this.name=name;
-    this.score=score;
+  Person(pos, name, score) {
+    this.pos = pos;
+    this.name = name;
+    this.score = score;
   }
 }
 
-
-
 class LeaderBoard extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-
-    Future<List<Person>> getLeaderboard(int i) async{
-      var resp = await http.get("http://www.tlfbermuda.com/getleaderboard.php?challenge="+i.toString());
+    Future<List<Person>> getLeaderboard() async {
+      var resp = await http.get(
+          "http://www.tlfbermuda.com/getleaderboard.php?challenge=" +
+              ChallengeSelector.challengeN.toString());
       List<Person> list = new List<Person>();
       print(resp.body);
-      for(var p in json.decode(resp.body)){
-        list.add(new Person(p["TeamName"], int.parse(p["Score"])));
+      var i = 1;
+      for (var p in json.decode(resp.body)) {
+        list.add(new Person(i++, p["TeamName"], int.parse(p["Score"])));
       }
       return list;
     }
 
     return Scaffold(
-      appBar: new AppBar(
-        title: Text(
-          'Leaderboard',
-          style: TextStyle(
-            fontFamily: font,
-            fontSize: 26.0,
-            color: Colors.white,
+        appBar: new AppBar(
+          title: Text(
+            'Leaderboard',
+            style: TextStyle(
+              fontFamily: font,
+              fontSize: 26.0,
+              color: Colors.white,
+            ),
           ),
+          elevation: 0.0,
         ),
-        elevation: 0.0,
-      ),
-      backgroundColor: Colors.white12,
-      body: FutureBuilder(
-        future: getLeaderboard(ChallengeSelector.challengeN),
-    builder: (BuildContext context, AsyncSnapshot snapshot) {
-    if (snapshot.data == null) {
-    return Container(child: Center(child: Text("Loading")));
-    } else {
-      return Column(children: <Widget>[
-    Flexible(
-            child: ListView.separated(
-          itemCount: snapshot.data.length,
-          separatorBuilder: (context, int index) => Divider(
-            height: 32,
-            color: Colors.orange[900],
-          ),
-          itemBuilder: (context, int index) {
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: InkWell(
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      WidgetSpan(
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.orange[900],
-                        ),
+        backgroundColor: Colors.white12,
+        body: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+              image: AssetImage("images/fullscreen.png"),
+              fit: BoxFit.cover,
+            )),
+            height: MediaQuery.of(context).size.height,
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * .04,
+            ),
+            child: FutureBuilder(
+              future: getLeaderboard(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.data == null) {
+                  return Container(child: Center(child: Text("Loading")));
+                } else {
+                  return Column(children: <Widget>[
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .03,
+                    ),
+                    Flexible(
+                        child: ListView.separated(
+                      itemCount: snapshot.data.length,
+                      separatorBuilder: (context, int index) => Divider(
+                        height: MediaQuery.of(context).size.height * .05,
+                        color: Colors.black,
                       ),
-                      TextSpan(
-                        text: ' ${snapshot.data[index]} ',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontFamily: font,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        )),
+                      itemBuilder: (context, int index) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  MediaQuery.of(context).size.width * .05),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              RichText(
+                                  text: TextSpan(
+                                text: ' ${snapshot.data[index].pos} ',
+                                style: TextStyle(
+                                  fontSize:
+                                      MediaQuery.of(context).size.width * .06,
+                                  fontFamily: font,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black,
+                                ),
+                              )),
+                              RichText(
+                                  text: TextSpan(
+                                text: ' ${snapshot.data[index].name} ',
+                                style: TextStyle(
+                                  fontSize:
+                                      MediaQuery.of(context).size.width * .06,
+                                  fontFamily: font,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black,
+                                ),
+                              )),
+                              RichText(
+                                text: TextSpan(
+                                    text: ' ${snapshot.data[index].score} ',
+                                    style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width *
+                                              .06,
+                                      fontFamily: font,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black,
+                                    )),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    )),
 //        Expanded(
 //          child: Align(
 //            alignment: FractionalOffset.bottomCenter,
@@ -114,7 +148,9 @@ class LeaderBoard extends StatelessWidget {
 //        SizedBox(
 //          height: 25.0,
 //        ),
-      ]);}},
-    ));
+                  ]);
+                }
+              },
+            )));
   }
 }

@@ -7,6 +7,8 @@ import 'package:kirk_app/login_screen.dart';
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:kirk_app/take_picture.dart';
+import 'package:kirk_app/forgot_pass_2.dart';
+import 'package:kirk_app/forgot_pass_screen.dart';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -33,6 +35,8 @@ Future<void> main() async {
       QuestionScreen.id: (context) => QuestionScreen(),
       TakePictureScreen.id: (context) => TakePictureScreen(camera: firstCamera),
       LoginScreen.id: (context) => LoginScreen(),
+      ForgotPassScreen.id: (context) => ForgotPassScreen(),
+      ForgotPassScreen2.id: (context) => ForgotPassScreen2(),
     },
   )
   );

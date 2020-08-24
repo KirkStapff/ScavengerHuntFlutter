@@ -8,30 +8,32 @@ class Instructions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("images/fullscreen.png"),
+              fit: BoxFit.cover,
+            )
+        ),
         height: MediaQuery.of(context).size.height,
-        color: Colors.white,
         padding: EdgeInsets.symmetric(
-          horizontal: 24.0,
+          horizontal: MediaQuery.of(context).size.width * .04,
         ),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Container(
-                height: 15.0,
-                width: 400.0,
-              ),
               SizedBox(
-                height: 15,
+                height: MediaQuery.of(context).size.height * .045,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0),
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * .06),
                 child: Text(
                   'Instructions',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 45.0,
+                    fontSize: .105 * MediaQuery.of(context).size.width,
                     fontFamily: 'Carter One',
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
@@ -39,15 +41,16 @@ class Instructions extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: MediaQuery.of(context).size.height * .03,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * .08),
                 child: Text(
-                  '1. Fill out Payment Form',
+                  '1. Choose a challenge',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: .05 * MediaQuery.of(context).size.width,
                     height: 1.5,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
@@ -56,15 +59,17 @@ class Instructions extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 20.0,
+                height: MediaQuery.of(context).size.height * .03,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * .08),
                 child: Text(
-                  '2. Choose a Challenge',
+                  '2. Review the rewards and pay for the challenge '
+                      'with your card on file',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: .05 * MediaQuery.of(context).size.width,
                     height: 1.5,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
@@ -73,15 +78,16 @@ class Instructions extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 20.0,
+                height: MediaQuery.of(context).size.height * .03,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * .08),
                 child: Text(
                   '3. Using a phone with a working camera answer the questions',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: .05 * MediaQuery.of(context).size.width,
                     height: 1.5,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
@@ -90,15 +96,16 @@ class Instructions extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 20.0,
+                height: MediaQuery.of(context).size.height * .03,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * .08),
                 child: Text(
                   '4. Stay with your team',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: .05 * MediaQuery.of(context).size.width,
                     height: 1.5,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
@@ -107,16 +114,17 @@ class Instructions extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 20.0,
+                height: MediaQuery.of(context).size.height * .03,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * .08),
                 child: Text(
                   '5. The team who finishes fastest with the most correct answers'
-                  ' wins',
+                      ' wins',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: .05 * MediaQuery.of(context).size.width,
                     height: 1.5,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
@@ -125,15 +133,16 @@ class Instructions extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 20.0,
+                height: MediaQuery.of(context).size.height * .03,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * .08),
                 child: Text(
                   'Be Safe!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: .05 * MediaQuery.of(context).size.width,
                     height: 1.5,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
@@ -142,10 +151,11 @@ class Instructions extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 30.0,
+                height: MediaQuery.of(context).size.height * .01,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
+                padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height * .02),
                 child: Material(
                   elevation: 5.0,
                   color: Colors.blue[1000],
@@ -157,12 +167,12 @@ class Instructions extends StatelessWidget {
                         return ChallengeSelector();
                       }));
                     },
-                    minWidth: 200.0,
-                    height: 42.0,
+                    minWidth: MediaQuery.of(context).size.width * .5,
+                    height: MediaQuery.of(context).size.height * .04,
                     child: Text(
                       'Next',
                       style: TextStyle(
-                        fontSize: 15,
+                        fontSize: .05 * MediaQuery.of(context).size.width,
                         fontFamily: font,
                         color: Colors.red[200],
                       ),

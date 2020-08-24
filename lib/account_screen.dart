@@ -2,13 +2,15 @@ import 'dart:convert';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kirk_app/challenge_selector.dart';
 import 'package:kirk_app/instructions.dart';
+import 'package:kirk_app/login_screen.dart';
 import 'package:kirk_app/style_constants.dart';
 import 'dart:io';
-import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 
 class Account{
   String first;
@@ -59,6 +61,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   String vPass = '';
 
   bool errorFree = false;
+  bool checkedValue = false;
 
   @override
   Widget build(BuildContext context) {
@@ -134,32 +137,43 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       );
     }
 
+    _launchURL() async {
+      const url = 'https://wwsl.dev/agiftforagape.dev/foh-privacy-policy/';
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    }
+
     return Scaffold(
       body: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("images/fullscreen.png"),
+              fit: BoxFit.cover,
+            )
+        ),
         height: MediaQuery.of(context).size.height,
-        color: Colors.white,
         padding: EdgeInsets.symmetric(
-          horizontal: 24.0,
+          horizontal: 0.0,
         ),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Container(
-                height: 15.0,
-                width: 400.0,
-              ),
               SizedBox(
-                height: 15,
+                height: MediaQuery.of(context).size.height * .045,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * .04),
                 child: Text(
                   'Create an Account',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 25.0,
+                    fontSize: .065 * MediaQuery.of(context).size.width,
                     fontFamily: 'Carter One',
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
@@ -167,52 +181,56 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 ),
               ),
               SizedBox(
-                height: 15,
-              ),
-              Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                        child: TextField(
-                      style: TextStyle(color: Colors.black),
-                      controller: firstNameTextController,
-                      onChanged: (value) {
-                        firstName = value;
-                      },
-                      decoration: InputDecoration(
-                        hintText: "Enter first name",
-                        hintStyle: TextStyle(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(1.0))),
-                      ),
-                    )),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                        child: TextField(
-                      style: TextStyle(color: Colors.black),
-                      controller: lastNameTextController,
-                      onChanged: (value) {
-                        lastName = value;
-                      },
-                      decoration: InputDecoration(
-                        hintText: "Enter last name here",
-                        hintStyle: TextStyle(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(1.0))),
-                      ),
-                    )),
-                  ]),
-              SizedBox(
-                height: 20.0,
+                height: MediaQuery.of(context).size.height * .015,
               ),
               Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.0),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * .04),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                            child: TextField(
+                              style: TextStyle(color: Colors.black),
+                              controller: firstNameTextController,
+                              onChanged: (value) {
+                                firstName = value;
+                              },
+                              decoration: InputDecoration(
+                                hintText: "Enter first name",
+                                hintStyle: TextStyle(color: Colors.black),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(width: 1.5),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(1.0))),
+                              ),
+                            )),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                            child: TextField(
+                              style: TextStyle(color: Colors.black),
+                              controller: lastNameTextController,
+                              onChanged: (value) {
+                                lastName = value;
+                              },
+                              decoration: InputDecoration(
+                                hintText: "Enter last name here",
+                                hintStyle: TextStyle(color: Colors.black),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(width: 1.5),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(1.0))),
+                              ),
+                            )),
+                      ])),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .01,
+              ),
+              Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * .04),
                   child: TextField(
                     style: TextStyle(color: Colors.black),
                     controller: teamNameTextController,
@@ -225,16 +243,17 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         color: Colors.black,
                       ),
                       enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(),
+                          borderSide: const BorderSide(width: 1.5),
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(1.0))),
+                          const BorderRadius.all(Radius.circular(1.0))),
                     ),
                   )),
               SizedBox(
-                height: 10.0,
+                height: MediaQuery.of(context).size.height * .01,
               ),
               Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.0),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * .04),
                   child: TextField(
                     style: TextStyle(color: Colors.black),
                     controller: eMailTextController,
@@ -245,60 +264,64 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       hintText: "Enter your email",
                       hintStyle: TextStyle(color: Colors.black),
                       enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(),
+                          borderSide: const BorderSide(width: 1.5),
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(1.0))),
+                          const BorderRadius.all(Radius.circular(1.0))),
                     ),
                   )),
               SizedBox(
-                height: 10.0,
-              ),
-              Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                        child: TextField(
-                      style: TextStyle(color: Colors.black),
-                      obscureText: true,
-                      controller: passTextController,
-                      onChanged: (value) {
-                        pass = value;
-                      },
-                      decoration: InputDecoration(
-                        hintText: "Enter password",
-                        hintStyle: TextStyle(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(1.0))),
-                      ),
-                    )),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                        child: TextField(
-                      style: TextStyle(color: Colors.black),
-                      obscureText: true,
-                      controller: vPassTextController,
-                      onChanged: (value) {
-                        vPass = value;
-                      },
-                      decoration: InputDecoration(
-                        hintText: "Re-enter password",
-                        hintStyle: TextStyle(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(1.0))),
-                      ),
-                    )),
-                  ]),
-              SizedBox(
-                height: 10.0,
+                height: MediaQuery.of(context).size.height * .01,
               ),
               Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.0),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * .04),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                            child: TextField(
+                              style: TextStyle(color: Colors.black),
+                              obscureText: true,
+                              controller: passTextController,
+                              onChanged: (value) {
+                                pass = value;
+                              },
+                              decoration: InputDecoration(
+                                hintText: "Enter password",
+                                hintStyle: TextStyle(color: Colors.black),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(width: 1.5),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(1.0))),
+                              ),
+                            )),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                            child: TextField(
+                              style: TextStyle(color: Colors.black),
+                              obscureText: true,
+                              controller: vPassTextController,
+                              onChanged: (value) {
+                                vPass = value;
+                              },
+                              decoration: InputDecoration(
+                                hintText: "Re-enter password",
+                                hintStyle: TextStyle(color: Colors.black),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(width: 1.5),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(1.0))),
+                              ),
+                            )),
+                      ])),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .01,
+              ),
+              Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * .04),
                   child: TextField(
                     style: TextStyle(color: Colors.black),
                     controller: telTextController,
@@ -314,16 +337,17 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       hintText: "Enter your phone #",
                       hintStyle: TextStyle(color: Colors.black),
                       enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(),
+                          borderSide: const BorderSide(width: 1.5),
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(1.0))),
+                          const BorderRadius.all(Radius.circular(1.0))),
                     ),
                   )),
               SizedBox(
-                height: 10.0,
+                height: MediaQuery.of(context).size.height * .01,
               ),
               Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0.0),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * .04),
                   child: TextField(
                     style: TextStyle(color: Colors.black),
                     controller: cardNumberTextController,
@@ -339,96 +363,99 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       hintText: "Enter your credit card number",
                       hintStyle: TextStyle(color: Colors.black),
                       enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(),
+                          borderSide: const BorderSide(width: 1.5),
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(1.0))),
+                          const BorderRadius.all(Radius.circular(1.0))),
                     ),
                   )),
               SizedBox(
-                height: 10.0,
-              ),
-              Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                        child: TextField(
-                      style: TextStyle(color: Colors.black),
-                      controller: expMonthTextController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(2)
-                      ],
-                      onChanged: (value) {
-                        expMonth = value;
-                      },
-                      decoration: InputDecoration(
-                        hintText: "Exp. Month",
-                        hintStyle: TextStyle(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(1.0))),
-                      ),
-                    )),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                        child: TextField(
-                      style: TextStyle(color: Colors.black),
-                      controller: expYearTextController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(2)
-                      ],
-                      onChanged: (value) {
-                        expYear = value;
-                      },
-                      decoration: InputDecoration(
-                        hintText: "Exp. Year",
-                        hintStyle: TextStyle(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(1.0))),
-                      ),
-                    )),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                        child: TextField(
-                      style: TextStyle(color: Colors.black),
-                      controller: cvvTextController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(3)
-                      ],
-                      onChanged: (value) {
-                        cvv = value;
-                      },
-                      decoration: InputDecoration(
-                        hintText: "CVV",
-                        hintStyle: TextStyle(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(1.0))),
-                      ),
-                    )),
-                  ]),
-              SizedBox(
-                height: 10.0,
+                height: MediaQuery.of(context).size.height * .01,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * .04),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                            child: TextField(
+                              style: TextStyle(color: Colors.black),
+                              controller: expMonthTextController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                WhitelistingTextInputFormatter.digitsOnly,
+                                LengthLimitingTextInputFormatter(2)
+                              ],
+                              onChanged: (value) {
+                                expMonth = value;
+                              },
+                              decoration: InputDecoration(
+                                hintText: "Exp. Month",
+                                hintStyle: TextStyle(color: Colors.black),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(width: 1.5),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(1.0))),
+                              ),
+                            )),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                            child: TextField(
+                              style: TextStyle(color: Colors.black),
+                              controller: expYearTextController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                WhitelistingTextInputFormatter.digitsOnly,
+                                LengthLimitingTextInputFormatter(2)
+                              ],
+                              onChanged: (value) {
+                                expYear = value;
+                              },
+                              decoration: InputDecoration(
+                                hintText: "Exp. Year",
+                                hintStyle: TextStyle(color: Colors.black),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(width: 1.5),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(1.0))),
+                              ),
+                            )),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                            child: TextField(
+                              style: TextStyle(color: Colors.black),
+                              controller: cvvTextController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                WhitelistingTextInputFormatter.digitsOnly,
+                                LengthLimitingTextInputFormatter(3)
+                              ],
+                              onChanged: (value) {
+                                cvv = value;
+                              },
+                              decoration: InputDecoration(
+                                hintText: "CVV",
+                                hintStyle: TextStyle(color: Colors.black),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(width: 1.5),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(1.0))),
+                              ),
+                            )),
+                      ])),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .02,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 0.0),
                 child: Material(
                   elevation: 5.0,
                   color: Colors.blue[1000],
-                  borderRadius: BorderRadius.circular(60.0),
+                  borderRadius: BorderRadius.circular(50.0),
                   child: MaterialButton(
                     onPressed: () {
                       errorFree = (eMail.contains('@') &&
@@ -438,23 +465,26 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           expMonth.length == 2 &&
                           expYear.length == 2 &&
                           cvv.length == 3);
-                    if(errorFree){
-                      registerAccount(context, new Account(firstName, lastName, teamName, eMail, pass, tel, cardNumber, expMonth, expYear, cvv));
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Instructions()),
-                      );
-                    } else {
+                      if (errorFree && checkedValue) {
+                        registerAccount(
+                            context,
+                            new Account(firstName, lastName, teamName, eMail,
+                                pass, tel, cardNumber, expMonth, expYear, cvv));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Instructions()),
+                        );
+                      } else {
                         _showMyDialog();
                       }
                     },
-                    minWidth: 200.0,
-                    height: 42.0,
+                    minWidth: MediaQuery.of(context).size.width * .5,
+                    height: MediaQuery.of(context).size.height * .05,
                     child: Text(
                       'Next',
                       style: TextStyle(
-                        fontSize: 15,
+                        fontSize: .05 * MediaQuery.of(context).size.width,
                         fontFamily: font,
                         color: Colors.red[200],
                       ),
@@ -462,6 +492,49 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .01,
+              ),
+              Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0.0),
+                  child: Theme(
+                      data: ThemeData(unselectedWidgetColor: Colors.red),
+                      child: CheckboxListTile(
+                        activeColor: Colors.green,
+                        title: RichText(
+                            text: TextSpan(children: [
+                              TextSpan(
+                                  text:
+                                  "By ticking this box you agree to have your credit card"
+                                      "info securely stored by Island Hunt and agree to our ",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontFamily: font,
+                                    color: Colors.black,
+                                  )),
+                              TextSpan(
+                                text: 'privacy policy',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontFamily: font,
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.blue,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    _launchURL();
+                                  },
+                              ),
+                            ])),
+                        value: checkedValue,
+                        onChanged: (newValue) {
+                          setState(() {
+                            checkedValue = newValue;
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity
+                            .leading, //  <-- leading Checkbox
+                      ))),
             ],
           ),
         ),

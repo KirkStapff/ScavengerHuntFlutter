@@ -27,6 +27,7 @@ dependencies:
   path_provider:
   path:
   http:
+  url_launcher: ^5.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -52,6 +53,7 @@ flutter:
     - images/tlflogo.png
     - images/foh.png
     - images/imgph.png
+    - images/fullscreen.png
     - cert/UserCertificate.pem
     - cert/WebCertificate.pem
     - cert/PrivateKey.pem
