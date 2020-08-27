@@ -512,7 +512,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Instructions()),
+                              builder: (context) => LoginScreen()),
                         );
                       } else {
                         _showMyDialog();

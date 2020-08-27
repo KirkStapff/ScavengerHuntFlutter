@@ -13,6 +13,7 @@ import 'dart:io';
 class QuestionScreen extends StatelessWidget {
   static int starttime = 0;
   static int endtime = 0;
+  static List<String> answers;
   static const String id = "question";
   int questionN = 1;
   List<Question> questions;
@@ -27,10 +28,6 @@ class QuestionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(ChallengeSelector.challengeN==1){
-      starttime = (DateTime.now().microsecondsSinceEpoch/100000000).floor();
-      print(starttime);
-    }
     return Scaffold(
         body: Container(
             decoration: BoxDecoration(
@@ -134,7 +131,9 @@ class QuestionScreen extends StatelessWidget {
                             if (!questions[ChallengeSelector.order - 1].textAnswer)
                               Navigator.pushNamed(context, "take_picture");
                             else {
+                              answers[ChallengeSelector.challengeN] = textAnswer;
                               if (ChallengeSelector.order == questions.length) {
+                                sendAnswers();
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -174,16 +173,19 @@ class QuestionScreen extends StatelessWidget {
                 ))));
   }
 
-  Future sendAnswers() async {
+  static Future sendAnswers() async {
+    endtime = (DateTime.now().microsecondsSinceEpoch/10000000).floor();
+    print("endTime:"+endtime.toString());
+    String answers = jsonEncode(QuestionScreen.answers);
+    print(answers);
     var client = HttpClient(context: LoginScreen.sec_context);
     client.badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
 
     // The rest of this code comes from your question.
-    var uri = "https://tlfbermuda.com/setleaderboard.php";
-
+    var uri = "https://tlfbermuda.com/setleaderboard.php?challenge="+ChallengeSelector.challengeN.toString();
     const Base64Codec base64 = Base64Codec(); const Latin1Codec latin1 = Latin1Codec();
-    var appKey = '["'+LoginScreen.account_id+'","'+(QuestionScreen.starttime-QuestionScreen.endtime).toString()+'"]';
-    print(appKey+"FUCKKKK");
+    var appKey = '["'+LoginScreen.account_id+'","'+(QuestionScreen.endtime-QuestionScreen.starttime).toString()+'","'+answers+'"]';
+    print(appKey);
     //var bytes = latin1.encode(appKey);
     //appKey = base64.encode(bytes);
     var method = 'POST';

@@ -2,10 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kirk_app/forgot_pass_2.dart';
 import 'package:kirk_app/style_constants.dart';
+import 'package:kirk_app/instructions.dart';
+import 'package:kirk_app/login_screen.dart';
+import 'dart:convert';
+import 'dart:io';
 
 class ForgotPassScreen extends StatefulWidget {
   static const String id = 'forgot_pass_screen';
-
+  static String eMail = '';
+  static String code = "";
   @override
   _ForgotPassScreenState createState() => _ForgotPassScreenState();
 }
@@ -13,9 +18,6 @@ class ForgotPassScreen extends StatefulWidget {
 class _ForgotPassScreenState extends State<ForgotPassScreen> {
   final emailTextController = TextEditingController();
   final passWordTextController = TextEditingController();
-
-  String eMail = '';
-  String pass = '';
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +47,36 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
           );
         },
       );
+    }
+
+
+    Future forgot() async{
+      var client = HttpClient(context: LoginScreen.sec_context);
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      // The rest of this code comes from your question.
+      var uri = "https://tlfbermuda.com/forgotpassword.php";
+      const Latin1Codec latin1 = Latin1Codec();
+      var appKey = ForgotPassScreen.eMail;
+      //var bytes = latin1.encode(appKey);
+      //appKey = base64.encode(bytes);
+      var method = 'GET';
+      print("1");
+      var request = await client.openUrl(method, Uri.parse(uri));
+      request.headers.contentLength = 0;
+      request.headers.set(HttpHeaders.authorizationHeader, appKey);
+      //request.write(data);
+      var response = await request.close();
+      var textBack = new List<int>();
+      textBack.addAll(await response.first);
+      var success = utf8.decode(textBack);
+      if (success.compareTo("0") == 0) {
+        _showMyDialog();
+      } else {
+        ForgotPassScreen.code = utf8.decode(textBack);
+        print(ForgotPassScreen.code);
+        Navigator.of(context).pushNamed(ForgotPassScreen2.id);
+      }
     }
 
     return Scaffold(
@@ -89,7 +121,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                         style: TextStyle(color: Colors.black),
                         controller: emailTextController,
                         onChanged: (value) {
-                          eMail = value;
+                          ForgotPassScreen.eMail = value;
                         },
                         decoration: InputDecoration(
                           hintText: "Enter your email address",
@@ -113,7 +145,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                       borderRadius: BorderRadius.circular(60.0),
                       child: MaterialButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, ForgotPassScreen2.id);
+                          forgot();
                         },
                         minWidth: MediaQuery.of(context).size.width * .5,
                         height: MediaQuery.of(context).size.height * .05,

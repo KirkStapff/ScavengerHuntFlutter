@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:kirk_app/forgot_pass_screen.dart';
 import 'package:kirk_app/login_screen.dart';
 import 'package:kirk_app/style_constants.dart';
+import 'package:kirk_app/login_screen.dart';
+import 'dart:convert';
+import 'dart:io';
 
 class ForgotPassScreen2 extends StatefulWidget {
   static const String id = 'forgot_pass_screen_2';
@@ -23,6 +27,8 @@ class _ForgotPassScreen2State extends State<ForgotPassScreen2> {
 
   @override
   Widget build(BuildContext context) {
+
+
     Future<void> _showMyDialog() async {
       return showDialog<void>(
         context: context,
@@ -49,6 +55,35 @@ class _ForgotPassScreen2State extends State<ForgotPassScreen2> {
           );
         },
       );
+    }
+
+    Future reset() async{
+      var client = HttpClient(context: LoginScreen.sec_context);
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      // The rest of this code comes from your question.
+      var uri = "https://tlfbermuda.com/resetpassword.php";
+      const Latin1Codec latin1 = Latin1Codec();
+      var appKey = '["'+ForgotPassScreen.eMail+'","'+pass+'"]';
+      //var bytes = latin1.encode(appKey);
+      //appKey = base64.encode(bytes);
+      var method = 'GET';
+      print(appKey);
+      var request = await client.openUrl(method, Uri.parse(uri));
+      request.headers.contentLength = 0;
+      request.headers.set(HttpHeaders.authorizationHeader, appKey);
+      //request.write(data);
+      var response = await request.close();
+      var textBack = new List<int>();
+      textBack.addAll(await response.first);
+      var success = utf8.decode(textBack);
+      if (success.compareTo("0") == 0) {
+        _showMyDialog();
+        print(success);
+      } else {
+        print(success);
+        Navigator.of(context).pushNamed(LoginScreen.id);
+      }
     }
 
     return Scaffold(
@@ -163,9 +198,9 @@ class _ForgotPassScreen2State extends State<ForgotPassScreen2> {
                       borderRadius: BorderRadius.circular(60.0),
                       child: MaterialButton(
                         onPressed: () {
-                          errorFree = (pass.length > 3 && pass == vPass);
+                          errorFree = (pass.length > 3 && pass == vPass && ForgotPassScreen.code == code);
                           if (errorFree) {
-                            Navigator.pushNamed(context, LoginScreen.id);
+                            reset();
                           } else {
                             _showMyDialog();
                           }

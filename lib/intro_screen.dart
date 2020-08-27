@@ -81,7 +81,7 @@ class _IntroScreenState extends State<IntroScreen> {
               Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: MediaQuery.of(context).size.width * .06),
-                  child: Image.asset('images/foh.png')),
+                  child: Image.asset('images/foh.png', width: 160, height: 160,)),
               SizedBox(
                 height: MediaQuery.of(context).size.height * .03,
               ),

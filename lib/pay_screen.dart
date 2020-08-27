@@ -22,8 +22,9 @@ class PayScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Future<List<Question>> getQuestions(int challenge) async {
       var url = "http://www.tlfbermuda.com/getquestions.php?challenge=" +
-          challenge.toString();
+          ChallengeSelector.challengeN.toString();
       var resp = await http.get(url);
+      print(resp.body);
       var obj = json.decode(resp.body);
 
       ChallengeSelector.order = 1;
@@ -159,6 +160,9 @@ class PayScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(60.0),
                             child: MaterialButton(
                               onPressed: () {
+                                QuestionScreen.starttime = (DateTime.now().microsecondsSinceEpoch/10000000).floor();
+                                QuestionScreen.answers = List<String>(50);
+                                print("startTime:"+QuestionScreen.starttime.toString());
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
