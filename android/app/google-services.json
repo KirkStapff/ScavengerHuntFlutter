@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "273503468881",
+    "firebase_url": "https://islandhunt-72a51.firebaseio.com",
+    "project_id": "islandhunt-72a51",
+    "storage_bucket": "islandhunt-72a51.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273503468881:android:ca2ec5b54765330d542770",
+        "android_client_info": {
+          "package_name": "com.tlf.islandhunt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273503468881-rot03ke8v55q91opepgl5b4fl2lbc62k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_ucv443m2Yu-Osgd68XaXmjlEVsekBl0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273503468881-rot03ke8v55q91opepgl5b4fl2lbc62k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

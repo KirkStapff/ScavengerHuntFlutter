@@ -6,21 +6,34 @@ import 'package:kirk_app/take_picture.dart';
 import 'dart:convert';
 import 'package:kirk_app/question_set.dart';
 import 'leaderboard.dart';
-import 'package:kirk_app/leaderboard.dart';
+import 'package:kirk_app/time_screen.dart';
 import 'package:kirk_app/login_screen.dart';
 import 'dart:io';
+
+class Answer{
+  String ans;
+
+  Answer(String a){
+    ans = a;
+  }
+}
 
 class QuestionScreen extends StatelessWidget {
   static int starttime = 0;
   static int endtime = 0;
-  static List<String> answers;
+  static List<Answer> answers;
   static const String id = "question";
-  int questionN = 1;
   List<Question> questions;
 
-  static List<String> answer;
-
-  QuestionScreen({Key key, @required this.questions}) : super(key: key);
+  QuestionScreen({Key key, @required this.questions}) {
+    if(answers == null) {
+      print("chingla");
+      answers = new List<Answer>(questions.length);
+      for (var i = 0; i < questions.length; i++) {
+        answers[i] = (new Answer(""));
+      }
+    }
+  }
 
   String textAnswer = '';
 
@@ -28,6 +41,7 @@ class QuestionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         body: Container(
             decoration: BoxDecoration(
@@ -46,7 +60,7 @@ class QuestionScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * .045,
+                      height: MediaQuery.of(context).size.height * .12,
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -84,22 +98,33 @@ class QuestionScreen extends StatelessWidget {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .05,
                     ),
+                    Visibility(
+                      visible: !questions[ChallengeSelector.order-1].textAnswer,
+                      child: SizedBox(
+                      height: MediaQuery.of(context).size.height * .32,
+                    ),
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: MediaQuery.of(context).size.width * .1),
                       child: Visibility(
+
                         visible: questions[ChallengeSelector.order - 1].textAnswer,
-                        child: TextField(
-                          maxLines: 12,
-                          style: TextStyle(color: Colors.black),
-                          controller: textAnswerController,
+                        child: Padding(
+
+                          padding: EdgeInsets.only(bottom:30),
+                          child: TextFormField(
+                          initialValue: answers[ChallengeSelector.order-1].ans,
+                          maxLines: 9,
+                          style: TextStyle(color: Colors.black, fontSize: 18),
+                          //controller: textAnswerController,
                           onChanged: (value) {
                             textAnswer = value;
                           },
                           decoration: InputDecoration(
-                            fillColor: Colors.grey[300],
+
+                            fillColor: Colors.white,
                             filled: true,
-                            hintText: "Enter your answer here",
                             hintStyle: TextStyle(
                               color: Colors.black, height: MediaQuery.of(context).size.width * .004
                             ),
@@ -109,95 +134,168 @@ class QuestionScreen extends StatelessWidget {
                                 const BorderRadius.all(Radius.circular(1.0))),
                           ),
                         ),
+                        ),
                       ),
                     ),
-                    Visibility(
-                      visible: true,
-                      child: SizedBox(
-                        height: questions[ChallengeSelector.order - 1].textAnswer
-                            ? MediaQuery.of(context).size.height * .13
-                            : MediaQuery.of(context).size.height * .20,
+                    Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Column(children: [
+                      Center(
+                        child:Row(children: <Widget>[
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(left:30),
+                              child:Material(
+                                elevation: 5.0,
+                                color: Colors.blue[1000],
+                                borderRadius: BorderRadius.circular(60.0),
+                                child: MaterialButton(
+                                  onPressed: () {
+                                    if (questions[ChallengeSelector.order - 1].textAnswer && textAnswer!=""){
+                                      answers[ChallengeSelector.order - 1].ans = textAnswer;
+                                    }
+                                    ChallengeSelector.order -= 1;
+                                    if(ChallengeSelector.order < 1) {
+                                      ChallengeSelector.order = questions.length;
+                                    }
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => QuestionScreen(
+                                            questions: questions,
+                                          )),
+                                    );
+                                  },
+                                  minWidth: MediaQuery.of(context).size.width * .23,
+                                  height: MediaQuery.of(context).size.height * .05,
+                                  child: Text("Last",
+                                    style: TextStyle(
+                                      fontSize: .05 * MediaQuery.of(context).size.width,
+                                      fontFamily: font,
+                                      color: Colors.red[200],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Divider(),
+                          ),
+                          Container(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: EdgeInsets.only(right:30),
+                                child:Material(
+                                  elevation: 5.0,
+                                  color: Colors.blue[1000],
+                                  borderRadius: BorderRadius.circular(60.0),
+                                  child: MaterialButton(
+                                    onPressed: () {
+
+                                      if (questions[ChallengeSelector.order - 1].textAnswer && textAnswer!=""){
+                                        answers[ChallengeSelector.order-1].ans = textAnswer;
+                                      }
+                                      ChallengeSelector.order += 1;
+                                      if(ChallengeSelector.order > questions.length) {
+                                        ChallengeSelector.order = 1;
+                                      }
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => QuestionScreen(
+                                              questions: questions,
+                                            )),
+                                      );
+                                    },
+                                    minWidth: MediaQuery.of(context).size.width * .23,
+                                    height: MediaQuery.of(context).size.height * .05,
+                                    child: Text("Next",
+                                      style: TextStyle(
+                                        fontSize: .05 * MediaQuery.of(context).size.width,
+                                        fontFamily: font,
+                                        color: Colors.red[200],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                          ),
+                        ]),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 0.0),
-                      child: Material(
-                        elevation: 5.0,
-                        color: Colors.blue[1000],
-                        borderRadius: BorderRadius.circular(60.0),
-                        child: MaterialButton(
-                          onPressed: () {
-                            TakePictureScreen.holdQ = questions;
-                            if (!questions[ChallengeSelector.order - 1].textAnswer)
-                              Navigator.pushNamed(context, "take_picture");
-                            else {
-                              answers[ChallengeSelector.challengeN] = textAnswer;
-                              if (ChallengeSelector.order == questions.length) {
-                                sendAnswers();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LeaderBoard()),
-                                );
-                              } else {
-                                ChallengeSelector.order += 1;
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => QuestionScreen(
-                                        questions: questions,
-                                      )),
-                                );
-                              }
-                            }
-                          },
-                          minWidth: MediaQuery.of(context).size.width * .5,
-                          height: MediaQuery.of(context).size.height * .05,
-                          child: Text(
-                            !questions[ChallengeSelector.order - 1].textAnswer
-                                ? "Found It!"
-                                : "Submit!",
-                            style: TextStyle(
-                              fontSize: .05 * MediaQuery.of(context).size.width,
-                              fontFamily: font,
-                              color: Colors.red[200],
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .02,
+                      ),
+                      Visibility(
+                        visible:!questions[ChallengeSelector.order - 1].textAnswer,
+                        child:Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 0.0),
+                          child: Material(
+                            elevation: 5.0,
+                            color: Colors.blue[1000],
+                            borderRadius: BorderRadius.circular(60.0),
+                            child: MaterialButton(
+                              onPressed: () {
+                                TakePictureScreen.holdQ = questions;
+                                Navigator.pushNamed(context, "take_picture");
+                              },
+                              minWidth: MediaQuery.of(context).size.width * .5,
+                              height: MediaQuery.of(context).size.height * .05,
+                              child: Text(
+                                "Found It!",
+                                style: TextStyle(
+                                  fontSize: .05 * MediaQuery.of(context).size.width,
+                                  fontFamily: font,
+                                  color: Colors.red[200],
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .02,
-                    ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .02,
+                      ),
+                      Visibility(
+                        visible: ChallengeSelector.order == questions.length,
+                        child:Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 0.0),
+                          child: Material(
+                            elevation: 5.0,
+                            color: Colors.blue[1000],
+                            borderRadius: BorderRadius.circular(60.0),
+                            child: MaterialButton(
+                              onPressed: () {
+                                if (questions[ChallengeSelector.order - 1].textAnswer){
+                                  answers[ChallengeSelector.order- 1].ans = textAnswer;
+                                }
+                                endtime = (DateTime.now().microsecondsSinceEpoch/1000000).floor();
+                                TimeScreen.holdQ = questions;
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TimeScreen()),
+                                );
+                              },
+                              minWidth: MediaQuery.of(context).size.width * .5,
+                              height: MediaQuery.of(context).size.height * .05,
+                              child: Text("Save",
+                                style: TextStyle(
+                                  fontSize: .05 * MediaQuery.of(context).size.width,
+                                  fontFamily: font,
+                                  color: Colors.red[200],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .02,
+                      ),
+                    ],)),
                   ],
                 ))));
-  }
-
-  static Future sendAnswers() async {
-    endtime = (DateTime.now().microsecondsSinceEpoch/10000000).floor();
-    print("endTime:"+endtime.toString());
-    String answers = jsonEncode(QuestionScreen.answers);
-    print(answers);
-    var client = HttpClient(context: LoginScreen.sec_context);
-    client.badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
-
-    // The rest of this code comes from your question.
-    var uri = "https://tlfbermuda.com/setleaderboard.php?challenge="+ChallengeSelector.challengeN.toString();
-    const Base64Codec base64 = Base64Codec(); const Latin1Codec latin1 = Latin1Codec();
-    var appKey = '["'+LoginScreen.account_id+'","'+(QuestionScreen.endtime-QuestionScreen.starttime).toString()+'","'+answers+'"]';
-    print(appKey);
-    //var bytes = latin1.encode(appKey);
-    //appKey = base64.encode(bytes);
-    var method = 'POST';
-
-    var request = await client.openUrl(method,Uri.parse(uri));
-    request.headers.contentLength = 0;
-    request.headers.set(HttpHeaders.authorizationHeader,
-        appKey);
-    //request.write(data);
-    var response = await request.close();
-    var textBack = new List<int>();
-    textBack.addAll(await response.first);
-    print(latin1.decode(textBack));
   }
 }

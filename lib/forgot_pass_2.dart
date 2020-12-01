@@ -190,34 +190,60 @@ class _ForgotPassScreen2State extends State<ForgotPassScreen2> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * .05,
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 0.0),
-                    child: Material(
-                      elevation: 5.0,
-                      color: Colors.blue[1000],
-                      borderRadius: BorderRadius.circular(60.0),
-                      child: MaterialButton(
-                        onPressed: () {
-                          errorFree = (pass.length > 3 && pass == vPass && ForgotPassScreen.code == code);
-                          if (errorFree) {
-                            reset();
-                          } else {
-                            _showMyDialog();
-                          }
-                        },
-                        minWidth: MediaQuery.of(context).size.width * .5,
-                        height: MediaQuery.of(context).size.height * .05,
-                        child: Text(
-                          'Submit',
-                          style: TextStyle(
-                            fontSize: .045 * MediaQuery.of(context).size.width,
-                            fontFamily: font,
-                            color: Colors.red[200],
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 0.0),
+                        child: Material(
+                          elevation: 5.0,
+                          color: Colors.blue[1000],
+                          borderRadius: BorderRadius.circular(60.0),
+                          child: MaterialButton(
+                            onPressed: () {
+                              errorFree = (pass.length > 3 && pass == vPass && ForgotPassScreen.code == code);
+                              if (errorFree) {
+                                reset();
+                              } else {
+                                _showMyDialog();
+                              }
+                            },
+                            minWidth: MediaQuery.of(context).size.width * .5,
+                            height: MediaQuery.of(context).size.height * .05,
+                            child: Text(
+                              'Submit',
+                              style: TextStyle(
+                                fontSize: .045 * MediaQuery.of(context).size.width,
+                                fontFamily: font,
+                                color: Colors.red[200],
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .03,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 0.0),
+                        child: Material(
+                          elevation: 5.0,
+                          color: Colors.blue[1000],
+                          borderRadius: BorderRadius.circular(60.0),
+                          child: MaterialButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, LoginScreen.id);
+                            },
+                            minWidth: MediaQuery.of(context).size.width * .5,
+                            height: MediaQuery.of(context).size.height * .05,
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                fontSize: .045 * MediaQuery.of(context).size.width,
+                                fontFamily: font,
+                                color: Colors.red[200],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                 ]))));
   }
 }

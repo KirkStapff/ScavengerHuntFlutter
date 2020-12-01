@@ -7,7 +7,8 @@ import 'package:kirk_app/style_constants.dart';
 import 'package:kirk_app/instructions.dart';
 import 'package:kirk_app/challenge_selector.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'storage.dart';
 
 class IntroScreen extends StatefulWidget {
   static const String id = 'intro';
@@ -17,6 +18,15 @@ class IntroScreen extends StatefulWidget {
 }
 
 class _IntroScreenState extends State<IntroScreen> {
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+
+  registerOnFirebase(){
+    firebaseMessaging.subscribeToTopic('all');
+    firebaseMessaging.getToken().then((value) => print("token:"+value));
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +47,7 @@ class _IntroScreenState extends State<IntroScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(
-                height: MediaQuery.of(context).size.height * .045,
+                height: MediaQuery.of(context).size.height * .09,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
@@ -57,7 +67,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * .05,
+                height: MediaQuery.of(context).size.height * .01,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
@@ -121,5 +131,23 @@ class _IntroScreenState extends State<IntroScreen> {
         ),
       ),
     );
+  }
+
+  void initState() {
+    registerOnFirebase();
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => autologin(context));
+  }
+
+  void autologin(BuildContext context) async{
+    if(await Storage.getUser() != null) {
+      if(await LoginScreen.loginAccount(context, await Storage.getUser(), await Storage.getPass(), true, false) == true){
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) {
+          return ChallengeSelector();
+        }));
+      }
+    }
   }
 }

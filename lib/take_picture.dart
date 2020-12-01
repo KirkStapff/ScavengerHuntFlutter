@@ -98,23 +98,12 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
             // Attempt to take a picture and log where it's been saved.
             await _controller.takePicture(path);
-
-            if (ChallengeSelector.order == TakePictureScreen.holdQ.length) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => DisplayPictureScreen(imagePath: path),
                 ),
               );
-            } else {
-              ChallengeSelector.order += 1;
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DisplayPictureScreen(imagePath: path),
-                ),
-              );
-            }
           } catch (e) {
             // If an error occurs, log the error to the console.
             print(e);
@@ -132,7 +121,6 @@ class DisplayPictureScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    test();
     return Scaffold(
         appBar: AppBar(title: Text('Your Picture')),
         // The image is stored as a file on the device. Use the `Image.file`
@@ -164,25 +152,14 @@ class DisplayPictureScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(60.0),
                               child: MaterialButton(
                                 onPressed: () {
-                                  if (ChallengeSelector.order ==
-                                      TakePictureScreen.holdQ.length) {
-                                    QuestionScreen.sendAnswers();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => LeaderBoard(),
-                                      ),
-                                    );
-                                  } else {
-                                    ChallengeSelector.order += 1;
-                                    Navigator.of(context).push(
+                                  QuestionScreen.answers[ChallengeSelector.order-1].ans = snapshot.data;
+                                  Navigator.of(context).push(
                                         MaterialPageRoute(builder: (context) {
                                       return QuestionScreen(
                                         questions: TakePictureScreen.holdQ,
                                       );
                                     }));
-                                  }
-                                },
+                                  },
                                 minWidth: 200.0,
                                 height: 42.0,
                                 child: Text(
@@ -204,17 +181,14 @@ class DisplayPictureScreen extends StatelessWidget {
             }));
   }
 
-  test(){
-    getImage();
-  }
-
-  Future<void> getImage() async {
+  Future<String> getImage() async {
     var image = await FlutterImageCompress.compressWithFile(
       await File(imagePath).absolute.path,
+      format: CompressFormat.jpeg,
       minWidth: 200,
       minHeight: 400,
-      quality: 90,
+      quality: 10,
     );
-    //QuestionScreen.answers[ChallengeSelector.challengeN] = base64Encode(image.toList());
+    return base64Encode(image.toList());
   }
 }

@@ -24,7 +24,7 @@ class Instructions extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(
-                height: MediaQuery.of(context).size.height * .035,
+                height: MediaQuery.of(context).size.height * .07,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(

@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:kirk_app/intro_screen.dart';
 import 'package:kirk_app/account_screen.dart';
+import 'package:kirk_app/account_screen_edit.dart';
 import 'package:kirk_app/question_screen.dart';
 import 'package:kirk_app/login_screen.dart';
 import 'dart:async';
@@ -27,11 +28,12 @@ Future<void> main() async {
         bodyText1: TextStyle(color: Colors.black54),
       ),
     ),
-    home: TakePictureScreen(camera: firstCamera,),
+    home: IntroScreen(),
     initialRoute: IntroScreen.id,
     routes: {
       IntroScreen.id: (context) => IntroScreen(),
       CreateAccountScreen.id: (context) => CreateAccountScreen(),
+      EditAccountScreen.id: (context) => EditAccountScreen(),
       QuestionScreen.id: (context) => QuestionScreen(),
       TakePictureScreen.id: (context) => TakePictureScreen(camera: firstCamera),
       LoginScreen.id: (context) => LoginScreen(),

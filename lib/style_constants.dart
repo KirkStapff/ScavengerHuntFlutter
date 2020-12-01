@@ -7,13 +7,12 @@ const iconSize = 30.0;
 const radiusCircle = 32.0;
 const font = 'Carter One';
 
-const primaryGradients = BoxDecoration(
-  gradient: LinearGradient(
-    begin: Alignment.topRight,
-    end: Alignment.bottomLeft,
-    colors: [gradientStart, gradientEnd],
-  ),
-);
+//const primaryGradients = BoxDecoration(
+//  gradient: LinearGradient([gradientStart, gradientEnd]
+//    begin: Alignment.topRight,
+//    end: Alignment.bottomLeft,
+//  ),
+//);
 
 const textFieldDecoration = InputDecoration(
   contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
