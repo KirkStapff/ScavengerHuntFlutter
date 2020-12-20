@@ -198,7 +198,8 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                   Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: MediaQuery.of(context).size.width * .04),
-                      child: Row(
+                      child: Flex(
+                        direction:Axis.horizontal,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Expanded(
@@ -309,8 +310,8 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                         initialValue: snapshot.data[4],
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
-                          WhitelistingTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(7)
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          LengthLimitingTextInputFormatter(10)
                         ],
                         onChanged: (value) {
                           tel = value;
@@ -338,7 +339,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                         initialValue: snapshot.data[5],
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
-                          WhitelistingTextInputFormatter.digitsOnly,
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                           LengthLimitingTextInputFormatter(16)
                         ],
                         onChanged: (value) {
@@ -360,7 +361,8 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                   Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: MediaQuery.of(context).size.width * .04),
-                      child: Row(
+                      child: Flex(
+                        direction: Axis.horizontal,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Expanded(
@@ -371,7 +373,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                                   initialValue: snapshot.data[6],
                                   keyboardType: TextInputType.number,
                                   inputFormatters: <TextInputFormatter>[
-                                    WhitelistingTextInputFormatter.digitsOnly,
+                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                                     LengthLimitingTextInputFormatter(2)
                                   ],
                                   onChanged: (value) {
@@ -398,7 +400,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                                   initialValue: snapshot.data[7],
                                   keyboardType: TextInputType.number,
                                   inputFormatters: <TextInputFormatter>[
-                                    WhitelistingTextInputFormatter.digitsOnly,
+                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                                     LengthLimitingTextInputFormatter(2)
                                   ],
                                   onChanged: (value) {
@@ -425,8 +427,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(
                         horizontal: MediaQuery.of(context).size.width * .04),
-                    child: Expanded(
-                        child: TextField(
+                    child: TextField(
                           style: TextStyle(
                               color: Colors.black,
                               height: MediaQuery.of(context).size.width * .004),
@@ -443,7 +444,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                                 borderRadius: const BorderRadius.all(
                                     Radius.circular(1.0))),
                           ),
-                        )),
+                        ),
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * .03,

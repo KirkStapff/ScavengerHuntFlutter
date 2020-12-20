@@ -359,7 +359,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
                       WhitelistingTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(7)
+                      LengthLimitingTextInputFormatter(10)
                     ],
                     onChanged: (value) {
                       tel = value;

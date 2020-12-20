@@ -30,7 +30,7 @@ class Storage{
     data.add(await stor.read(key: "expy"));
     data.add(await stor.read(key:"pass"));
 
-    return data;
+    return new Future(() => data);
   }
 
   static void logoutUser(){
