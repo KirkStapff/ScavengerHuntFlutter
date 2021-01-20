@@ -55,26 +55,30 @@ class LoginScreen extends StatefulWidget {
     var response = await request.close();
     var textBack = new List<int>();
     textBack.addAll(await response.first);
-    var success = utf8.decode(textBack);
-    if (success.compareTo("0") == 0 && !quick) {
+    var success = latin1.decode(textBack);
+    print(success);
+    if (success.indexOf("0") == 0 && !quick) {
       _showMyDialog(buildContext);
       return Future(() => false);
     }if(success.compareTo("0") == 0){
+      print('2');
       return Future(() => false);
     } else if ( !relog ) {
-      var udata = jsonDecode(utf8.decode(textBack));
+      print('3');
+      var udata = jsonDecode(latin1.decode(textBack));
       print(udata);
       LoginScreen.account_id = udata[0];
       Navigator.of(buildContext).push(MaterialPageRoute(builder: (context) {
-        Storage.storeUser(user, pass, udata[2], udata[3], udata[1], udata[4], udata[5], udata[6], udata[7], udata[8]);
+        Storage.storeUser(user, pass, udata[2], udata[3], user, udata[4], udata[5]);
         return Instructions();
       }));
       return Future(() => true);
     }else{
+      print('4');
       var udata = jsonDecode(utf8.decode(textBack));
       LoginScreen.account_id = udata[0];
       print(udata[2]);
-      Storage.storeUser(user, pass, udata[2], udata[3], udata[1], udata[4], udata[5], udata[6], udata[7], udata[8]);
+      Storage.storeUser(user, pass, udata[2], udata[3], user, udata[4], udata[5]);
     }
   }
 
@@ -159,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: EdgeInsets.symmetric(horizontal: 0.0),
                       child: TextField(
                         style: TextStyle(
-                          fontSize: 23,
+                          fontSize: 18,
                             color: Colors.black,
                             height: MediaQuery.of(context).size.width * .004),
                         controller: emailTextController,
@@ -182,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: EdgeInsets.symmetric(horizontal: 0.0),
                       child: TextField(
                         style: TextStyle(
-                          fontSize: 23,
+                          fontSize: 18,
                             color: Colors.black,
                             height: MediaQuery.of(context).size.width * .004),
                         obscureText: true,

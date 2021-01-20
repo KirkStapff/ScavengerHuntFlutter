@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kirk_app/account_finished.dart';
 import 'package:kirk_app/challenge_selector.dart';
 import 'package:kirk_app/instructions.dart';
 import 'package:kirk_app/login_screen.dart';
@@ -65,7 +66,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Future registerAccount(BuildContext buildContext, Account account) async {
+    Future<String> registerAccount(BuildContext buildContext, Account account) async {
       SecurityContext context = SecurityContext.defaultContext;
 
       ByteData file = await rootBundle.load('cert/WebCertificate.pem');
@@ -100,14 +101,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
           account.email +
           '","' +
           account.tel +
-          '","' +
-          account.credit +
-          '","' +
-          account.CVV +
-          '","' +
-          account.expMon +
-          '","' +
-          account.expYear +
           '"]';
       //var bytes = latin1.encode(appKey);
       //appKey = base64.encode(bytes);
@@ -124,21 +117,22 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       while (textBack.length % 4 != 0) {
         textBack.add(0);
       }
-      print(latin1.decode(textBack));
+      var resp = latin1.decode(textBack);
+      return Future(() => resp);
     }
 
-    Future<void> _showMyDialog() async {
+    Future<void> _showMyDialog(String s) async {
       return showDialog<void>(
         context: context,
         barrierDismissible: false, // user must tap button!
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Invalid Information'),
+            title: Text('Something Wrong'),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text('Some of the information you input is invalid.'),
-                  Text('\nPlease review your input and try again.'),
+                  Text(s),
+                  Text('\nPlease try again'),
                 ],
               ),
             ),
@@ -198,7 +192,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * .015,
+                height: MediaQuery.of(context).size.height * .03,
               ),
               Padding(
                   padding: EdgeInsets.symmetric(
@@ -216,7 +210,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             firstName = value;
                           },
                           decoration: InputDecoration(
-                            hintText: "Enter first name",
+                            hintText: "First name",
                             hintStyle: TextStyle(color: Colors.black),
                             enabledBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(width: 1.5),
@@ -237,7 +231,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             lastName = value;
                           },
                           decoration: InputDecoration(
-                            hintText: "Enter last name here",
+                            hintText: "Last name",
                             hintStyle: TextStyle(color: Colors.black),
                             enabledBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(width: 1.5),
@@ -247,7 +241,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         )),
                       ])),
               SizedBox(
-                height: MediaQuery.of(context).size.height * .01,
+                height: MediaQuery.of(context).size.height * .02,
               ),
               Padding(
                   padding: EdgeInsets.symmetric(
@@ -261,7 +255,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       teamName = value;
                     },
                     decoration: InputDecoration(
-                      hintText: "Enter your team's name",
+                      hintText: "Team name",
                       hintStyle: TextStyle(
                         color: Colors.black,
                       ),
@@ -272,7 +266,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     ),
                   )),
               SizedBox(
-                height: MediaQuery.of(context).size.height * .01,
+                height: MediaQuery.of(context).size.height * .02,
               ),
               Padding(
                   padding: EdgeInsets.symmetric(
@@ -286,7 +280,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       eMail = value;
                     },
                     decoration: InputDecoration(
-                      hintText: "Enter your email",
+                      hintText: "Email",
                       hintStyle: TextStyle(color: Colors.black),
                       enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(width: 1.5),
@@ -295,7 +289,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     ),
                   )),
               SizedBox(
-                height: MediaQuery.of(context).size.height * .01,
+                height: MediaQuery.of(context).size.height * .02,
               ),
               Padding(
                   padding: EdgeInsets.symmetric(
@@ -314,7 +308,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             pass = value;
                           },
                           decoration: InputDecoration(
-                            hintText: "Enter password",
+                            hintText: "Password",
                             hintStyle: TextStyle(color: Colors.black),
                             enabledBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(width: 1.5),
@@ -336,7 +330,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             vPass = value;
                           },
                           decoration: InputDecoration(
-                            hintText: "Re-enter password",
+                            hintText: "Verify password",
                             hintStyle: TextStyle(color: Colors.black),
                             enabledBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(width: 1.5),
@@ -346,7 +340,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         )),
                       ])),
               SizedBox(
-                height: MediaQuery.of(context).size.height * .01,
+                height: MediaQuery.of(context).size.height * .02,
               ),
               Padding(
                   padding: EdgeInsets.symmetric(
@@ -365,7 +359,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       tel = value;
                     },
                     decoration: InputDecoration(
-                      hintText: "Enter your phone #",
+                      hintText: "Phone Number: 441-123-4567",
                       hintStyle: TextStyle(color: Colors.black),
                       enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(width: 1.5),
@@ -373,119 +367,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               const BorderRadius.all(Radius.circular(1.0))),
                     ),
                   )),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .01,
-              ),
-              Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * .04),
-                  child: TextField(
-                    style: TextStyle(
-                        color: Colors.black,
-                        height: MediaQuery.of(context).size.width * .004),
-                    controller: cardNumberTextController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(16)
-                    ],
-                    onChanged: (value) {
-                      cardNumber = value;
-                    },
-                    decoration: InputDecoration(
-                      hintText: "Enter your credit card number",
-                      hintStyle: TextStyle(color: Colors.black),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(width: 1.5),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(1.0))),
-                    ),
-                  )),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .01,
-              ),
-              Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * .04),
-                  child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                            child: TextField(
-                          style: TextStyle(
-                              color: Colors.black,
-                              height: MediaQuery.of(context).size.width * .004),
-                          controller: expMonthTextController,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            WhitelistingTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(2)
-                          ],
-                          onChanged: (value) {
-                            expMonth = value;
-                          },
-                          decoration: InputDecoration(
-                            hintText: "Exp. Month",
-                            hintStyle: TextStyle(color: Colors.black),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(width: 1.5),
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(1.0))),
-                          ),
-                        )),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                            child: TextField(
-                          style: TextStyle(
-                              color: Colors.black,
-                              height: MediaQuery.of(context).size.width * .004),
-                          controller: expYearTextController,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            WhitelistingTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(2)
-                          ],
-                          onChanged: (value) {
-                            expYear = value;
-                          },
-                          decoration: InputDecoration(
-                            hintText: "Exp. Year",
-                            hintStyle: TextStyle(color: Colors.black),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(width: 1.5),
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(1.0))),
-                          ),
-                        )),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                            child: TextField(
-                          style: TextStyle(
-                              color: Colors.black,
-                              height: MediaQuery.of(context).size.width * .004),
-                          controller: cvvTextController,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            WhitelistingTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(3)
-                          ],
-                          onChanged: (value) {
-                            cvv = value;
-                          },
-                          decoration: InputDecoration(
-                            hintText: "CVV",
-                            hintStyle: TextStyle(color: Colors.black),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(width: 1.5),
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(1.0))),
-                          ),
-                        )),
-                      ])),
               SizedBox(
                 height: MediaQuery.of(context).size.height * .02,
               ),
@@ -497,25 +378,29 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   borderRadius: BorderRadius.circular(50.0),
                   child: MaterialButton(
                     onPressed: () {
-                      errorFree = (eMail.contains('@') &&
-                          pass == vPass &&
-                          tel.length == 7 &&
-                          cardNumber.length == 16 &&
-                          expMonth.length == 2 &&
-                          expYear.length == 2 &&
-                          cvv.length == 3);
-                      if (errorFree && checkedValue) {
+                      if (!(eMail.contains("@") && eMail.contains("."))){
+                        _showMyDialog("Email is not valid");
+                      }else if (tel.length < 10){
+                        _showMyDialog("Phone number is not valid, must be 10 digits");
+                      }else if(pass.compareTo(vPass) != 0){
+                        _showMyDialog("Password and Verify Password do not match");
+                      }else if(!checkedValue){
+                        _showMyDialog("You must accept the privacy policy below");
+                      }else{
                         registerAccount(
                             context,
                             new Account(firstName, lastName, teamName, eMail,
-                                pass, tel, cardNumber, expMonth, expYear, cvv));
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginScreen()),
+                                pass, tel, cardNumber, expMonth, expYear, cvv)).then((value) =>
+                                value.indexOf("400") == 0 ?
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AccountFinised()))
+                              : value.indexOf("200") == 0 ? _showMyDialog("Team name is already taken")
+                              : value.indexOf("201") == 0 ? _showMyDialog("Email is already in use")
+                              : value.indexOf("202") == 0 ? _showMyDialog("Phone number is already in use")
+                              : _showMyDialog("Server Error "+value.toString())
                         );
-                      } else {
-                        _showMyDialog();
                       }
                     },
                     minWidth: MediaQuery.of(context).size.width * .5,

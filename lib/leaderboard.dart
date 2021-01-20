@@ -27,7 +27,7 @@ class LeaderBoard extends StatelessWidget {
         "http://www.tlfbermuda.com/getleaderboard.php?challenge=" +
             ChallengeSelector.challengeN.toString());
     List<Person> list = new List<Person>();
-    //print(resp.body);
+    print(resp.body);
     var i = 1;
     for (var p in json.decode(resp.body)) {
       list.add(new Person(i++, p["TeamName"], int.parse(p["Score"])));

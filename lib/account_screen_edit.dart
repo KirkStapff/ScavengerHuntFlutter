@@ -75,7 +75,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
     change_expm = false;
     change_expy = false;
 
-    Future editAccount(BuildContext buildContext, Account account) async {
+    Future<String> editAccount(BuildContext buildContext, Account account) async {
       SecurityContext context = SecurityContext.defaultContext;
 
       ByteData file = await rootBundle.load('cert/WebCertificate.pem');
@@ -104,9 +104,6 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
           (change_tname ? 'TeamName='+account.team_name+ ',': "")+
           (change_email ? 'Email='+account.email+ ',': "")+
           (change_tel ? 'Tel='+account.tel+ ',': "")+
-          (change_card ? 'CardNumber='+account.credit+ ',': "")+
-          (change_expm ? 'ExpMonth='+account.expMon+ ',': "")+
-          (change_expy ? 'ExpYear='+account.expYear+ ',': "")+
           '","'+account.password+'","'+LoginScreen.account_id;
       appKey += '"]';
       //var bytes = latin1.encode(appKey);
@@ -124,7 +121,27 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
       while (textBack.length % 4 != 0) {
         textBack.add(0);
       }
-      print(latin1.decode(textBack));
+      var resp = latin1.decode(textBack);
+      print(resp);
+      if (resp.indexOf("400") == 0){
+        if (change_tname){
+          Storage.stor.write(key: "user", value: account.team_name);
+          Storage.stor.write(key: "teamName", value: account.team_name);
+        }
+        if(change_fname){
+          Storage.stor.write(key: "firstName", value: account.first);
+        }
+        if(change_lname){
+          Storage.stor.write(key: "lastName", value: account.last);
+        }
+        if(change_email){
+          Storage.stor.write(key: "email", value: account.email);
+        }
+        if(change_tel){
+          Storage.stor.write(key: "tel", value: account.tel);
+        }
+      }
+      return Future(()=>resp);
     }
 
     Future<void> _showMyDialog(String alert) async {
@@ -137,7 +154,6 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text('Some of the information you input is invalid.'),
                   Text('\n'+alert),
                 ],
               ),
@@ -210,10 +226,10 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                                   initialValue: snapshot.data[0],
                                   onChanged: (value) {
                                     firstName = value;
-                                    change_fname = true;
+                                    change_fname = !(firstName.indexOf(snapshot.data[0]) == 0 && snapshot.data[0].indexOf(firstName) == 0);
                                   },
                                   decoration: InputDecoration(
-                                    hintText: "Enter first name",
+                                    hintText: "First name",
                                     hintStyle: TextStyle(color: Colors.black),
                                     enabledBorder: OutlineInputBorder(
                                         borderSide: const BorderSide(width: 1.5),
@@ -232,10 +248,10 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                                   initialValue: snapshot.data[1],
                                   onChanged: (value) {
                                     lastName = value;
-                                    change_lname = true;
+                                    change_lname = !(lastName.indexOf(snapshot.data[1]) == 0 && snapshot.data[1].indexOf(lastName) == 0);
                                   },
                                   decoration: InputDecoration(
-                                    hintText: "Enter last name here",
+                                    hintText: "Last name",
                                     hintStyle: TextStyle(color: Colors.black),
                                     enabledBorder: OutlineInputBorder(
                                         borderSide: const BorderSide(width: 1.5),
@@ -257,11 +273,10 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                         initialValue: snapshot.data[2],
                         onChanged: (value) {
                           teamName = value;
-                          print(teamName);
-                          change_tname = true;
+                          change_tname = !(teamName.indexOf(snapshot.data[2]) == 0 && snapshot.data[2].indexOf(teamName) == 0);
                         },
                         decoration: InputDecoration(
-                          hintText: "Enter your team's name",
+                          hintText: "Team name",
                           hintStyle: TextStyle(
                             color: Colors.black,
                           ),
@@ -285,10 +300,10 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                         onChanged: (value) {
                           print(eMail);
                           eMail = value;
-                          change_email = true;
+                          change_email = !(eMail.indexOf(snapshot.data[3]) == 0 && snapshot.data[3].indexOf(eMail) == 0);
                         },
                         decoration: InputDecoration(
-                          hintText: "Enter your email",
+                          hintText: "Email",
                           hintStyle: TextStyle(color: Colors.black),
                           enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(width: 1.5),
@@ -315,10 +330,10 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                         ],
                         onChanged: (value) {
                           tel = value;
-                          change_tel = true;
+                          change_tel = !(tel.indexOf(snapshot.data[4]) == 0 && snapshot.data[4].indexOf(tel) == 0);
                         },
                         decoration: InputDecoration(
-                          hintText: "Enter your phone #",
+                          hintText: "Phone number",
                           hintStyle: TextStyle(color: Colors.black),
                           enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(width: 1.5),
@@ -328,101 +343,6 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                       )),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * .01,
-                  ),
-                  Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width * .04),
-                      child: TextFormField(
-                        style: TextStyle(
-                            color: Colors.black,
-                            height: MediaQuery.of(context).size.width * .004),
-                        initialValue: snapshot.data[5],
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                          LengthLimitingTextInputFormatter(16)
-                        ],
-                        onChanged: (value) {
-                          cardNumber = value;
-                          change_card = true;
-                        },
-                        decoration: InputDecoration(
-                          hintText: "Enter your credit card number",
-                          hintStyle: TextStyle(color: Colors.black),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(width: 1.5),
-                              borderRadius:
-                              const BorderRadius.all(Radius.circular(1.0))),
-                        ),
-                      )),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * .01,
-                  ),
-                  Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width * .04),
-                      child: Flex(
-                        direction: Axis.horizontal,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Expanded(
-                                child: TextFormField(
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      height: MediaQuery.of(context).size.width * .004),
-                                  initialValue: snapshot.data[6],
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                                    LengthLimitingTextInputFormatter(2)
-                                  ],
-                                  onChanged: (value) {
-                                    expMonth = value;
-                                    change_expm = true;
-                                  },
-                                  decoration: InputDecoration(
-                                    hintText: "Exp. Month",
-                                    hintStyle: TextStyle(color: Colors.black),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(width: 1.5),
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(1.0))),
-                                  ),
-                                )),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Expanded(
-                                child: TextFormField(
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      height: MediaQuery.of(context).size.width * .004),
-                                  initialValue: snapshot.data[7],
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                                    LengthLimitingTextInputFormatter(2)
-                                  ],
-                                  onChanged: (value) {
-                                    expYear = value;
-                                    change_expy = true;
-                                  },
-                                  decoration: InputDecoration(
-                                    hintText: "Exp. Year",
-                                    hintStyle: TextStyle(color: Colors.black),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(width: 1.5),
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(1.0))),
-                                  ),
-                                )),
-                            SizedBox(
-                              width: 20,
-                            ),
-
-                          ])),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * .02,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -456,37 +376,35 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                       color: Colors.blue[1000],
                       borderRadius: BorderRadius.circular(50.0),
                       child: MaterialButton(
-                        onPressed: () {
-                          errorFree = ((eMail.contains('@')) &&
-                              (tel.length == 7 || !change_tel) &&
-                              (cardNumber.length == 16 || !change_card) &&
-                              expMonth.length == 2  || !change_expm &&
-                              expYear.length == 2  || !change_expy);
-                          if (errorFree && pass == snapshot.data[8]) {
-                            Storage.storeUser(change_tname ? teamName:snapshot.data[2], snapshot.data[8], change_fname? firstName:snapshot.data[0], change_lname? lastName:snapshot.data[1], change_tname ? teamName:snapshot.data[2], change_email ? eMail:snapshot.data[3], change_tel ? tel:snapshot.data[4], change_card ? cardNumber:snapshot.data[5], change_expm ? expMonth:snapshot.data[6], change_expy ? expYear:snapshot.data[7]);
-                            editAccount(
-                                context,
-                                new Account(change_fname? firstName:snapshot.data[0], change_lname? lastName:snapshot.data[1], change_tname ? teamName:snapshot.data[2], change_email ? eMail:snapshot.data[3],
-                                    snapshot.data[8], change_tel ? tel:snapshot.data[4], change_card ? cardNumber:snapshot.data[5], change_expm ? expMonth:snapshot.data[6], change_expy ? expYear:snapshot.data[7], cvv));
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChallengeSelector()),
-                            );
-
-                          } else if (!change_email && !change_tel && !change_card && !change_expm && !change_expy) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChallengeSelector()),
-                            );
-                          }else{
-                            if(pass != snapshot.data[8])
-                              _showMyDialog("Password is incorrect");
-                            if(!eMail.contains('@'))
-                              _showMyDialog("Please enter valid email");
-                          }
-                        },
+                          onPressed: () {
+                            if (change_fname || change_lname || change_tname || change_email || change_tel){
+                              if (change_email && !(eMail.contains("@") && eMail.contains("."))){
+                                _showMyDialog("Email is not valid");
+                              }else if (tel.length < 10 && change_tel){
+                                _showMyDialog("Phone number is not valid, must be 10 digits");
+                              }else{
+                                editAccount(
+                                    context,
+                                    new Account(firstName, lastName, teamName, eMail,
+                                        pass, tel, cardNumber, expMonth, expYear, cvv)).then((value) =>
+                                value.indexOf("400") == 0 ?
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ChallengeSelector()))
+                                    : value.indexOf("200") == 0 ? _showMyDialog("Team name is already taken")
+                                    : value.indexOf("201") == 0 ? _showMyDialog("Email is already in use")
+                                    : value.indexOf("202") == 0 ? _showMyDialog("Phone number is already in use")
+                                    : _showMyDialog("Server Error "+value.toString())
+                                );
+                              }
+                            }else{
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ChallengeSelector()));
+                            }
+                          },
                         minWidth: MediaQuery.of(context).size.width * .5,
                         height: MediaQuery.of(context).size.height * .05,
                         child: Text(

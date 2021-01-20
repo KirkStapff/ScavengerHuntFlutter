@@ -11,13 +11,21 @@ import 'package:kirk_app/question_screen.dart';
 import 'package:kirk_app/question_set.dart';
 import 'dart:io';
 
+import 'leaderboard.dart';
+
 class PayScreen extends StatelessWidget {
   static const String id = "pay";
   String price = '';
   String reward = '';
   String cvv = '';
+  String card = '';
+  String expMon = '';
+  String expYear = '';
 
   final cvvTextController = TextEditingController();
+  final cardTextController = TextEditingController();
+  final expmTextController = TextEditingController();
+  final expyTextController = TextEditingController();
 
   PayScreen({Key key, this.price, this.reward}) : super(key: key);
 
@@ -52,28 +60,40 @@ class PayScreen extends StatelessWidget {
     }
 
     Future<bool> sendPayment(var questions) async {
-      var client = HttpClient(context: LoginScreen.sec_context);
-      client.badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-      // The rest of this code comes from your question.
-      var uri = "https://tlfbermuda.com/sendpayment.php";
-      const Latin1Codec latin1 = Latin1Codec();
-      var appKey = '["' + LoginScreen.account_id + '","' + cvv + '","' +
-          ChallengeSelector.price + '"]';
-      //var bytes = latin1.encode(appKey);
-      //appKey = base64.encode(bytes);
-      var method = 'GET';
-      print("2");
-      var request = await client.openUrl(method, Uri.parse(uri));
-      request.headers.contentLength = 0;
-      request.headers.set(HttpHeaders.authorizationHeader, appKey);
-      //request.write(data);
-      var response = await request.close();
-      var textBack = new List<int>();
-      textBack.addAll(await response.first);
-      var resCode = utf8.decode(textBack);
-      print(resCode);
-      if (resCode == "1") {
+      final http.Response response = await http.post(
+        'https://apitest.authorize.net/xml/v1/request.api',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<Object, Object>{
+            "createTransactionRequest": {
+              "merchantAuthentication": {
+                "name": "8jz7Fs7zV3H",
+                "transactionKey": "38jjKWmUu37m7647"
+              },
+              "transactionRequest": {
+                "transactionType": "authCaptureTransaction",
+                "amount": price,
+                "payment": {
+                  "creditCard": {
+                    "cardNumber": card,
+                    "expirationDate": "20"+expYear+"-"+expMon,
+                    "cardCode": cvv
+                  }
+                },
+                "processingOptions": {
+                  "isSubsequentAuth": "true"
+                },
+                "authorizationIndicatorType": {
+                  "authorizationIndicator": "final"
+                }
+              }
+            }
+        }),
+      );
+      var body = jsonDecode(response.body);
+      print(body["transactionResponse"]["responseCode"]);
+      if (int.parse(body["transactionResponse"]["responseCode"]) == 1) {
         QuestionScreen.starttime =
             (DateTime
                 .now()
@@ -89,7 +109,7 @@ class PayScreen extends StatelessWidget {
                       questions: questions)),
         );
       } else {
-        alert(context, "Credit Card Processing Error");
+        alert(context, "Credit Card Processing Error, Please try again later");
       }
     }
 
@@ -191,7 +211,7 @@ class PayScreen extends StatelessWidget {
                               horizontal:
                                   MediaQuery.of(context).size.width * .06),
                           child: Text(
-                            'Possible Rewards: ' + reward,
+                            'Possible Prizes: ' + reward,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: .05 * MediaQuery.of(context).size.width,
@@ -210,11 +230,8 @@ class PayScreen extends StatelessWidget {
                               horizontal:
                                   MediaQuery.of(context).size.width * .06),
                           child: Text(
-                            'By clicking "Next" you consent to your stored credit '
-                                    'card being charged \$' +
-                                price +
-                                ' dollars and understand that '
-                                    'you may not receive a prize.',
+                            'By clicking "Next" you will be ' +
+                                    'be charged \$',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: .05 * MediaQuery.of(context).size.width,
@@ -228,35 +245,60 @@ class PayScreen extends StatelessWidget {
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .06,
                         ),
-                        FutureBuilder(future:Storage.getUserData(), builder:(BuildContext context, AsyncSnapshot snapshot2) {
-                          if(snapshot2.data==null)
-                            return Text("loading...", style:TextStyle(color:Colors.black, fontSize: 22));
-                          return Text("From Card: "+snapshot2.data[5], style:TextStyle(color:Colors.black, fontSize: 22));
-                        }),
+                        Container(
+                          width: 500,
+                          child: TextField(
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 25,
+                                color: Colors.black,
+                                height:
+                                MediaQuery.of(context).size.height * .0012 ),
+
+                            controller: cardTextController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              LengthLimitingTextInputFormatter(16)
+                            ],
+                            onChanged: (value) {
+                              card = value;
+                            },
+                            decoration: InputDecoration(
+
+                              hintText: "Card Number",
+                              hintStyle: TextStyle(color: Colors.black),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(width: 1.5),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(1.0))),
+                            ),
+                          ),
+                        ),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .03,
                         ),
-                        Container(
-                          width: 100,
-                          child: TextField(
-                            textAlign: TextAlign.center,
+                        Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                          Container(
+                            width: 100,
+                            child: TextField(
+                              textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 25,
+                                  fontSize: 18,
                                   color: Colors.black,
                                   height:
-                                      MediaQuery.of(context).size.height * .0012 ),
+                                  MediaQuery.of(context).size.height * .0012 ),
 
                               controller: cvvTextController,
                               keyboardType: TextInputType.number,
                               inputFormatters: <TextInputFormatter>[
-                                LengthLimitingTextInputFormatter(3)
+                                LengthLimitingTextInputFormatter(4)
                               ],
                               onChanged: (value) {
                                 cvv = value;
                               },
                               decoration: InputDecoration(
 
-                                hintText: "CVV",
+                                hintText: "cvv",
                                 hintStyle: TextStyle(color: Colors.black),
                                 enabledBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(width: 1.5),
@@ -264,7 +306,67 @@ class PayScreen extends StatelessWidget {
                                         Radius.circular(1.0))),
                               ),
                             ),
-                        ),
+                          ),
+                          Container(
+                            width: 100,
+                            child: TextField(
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                  height:
+                                  MediaQuery.of(context).size.height * .0012 ),
+
+                              controller: expmTextController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                LengthLimitingTextInputFormatter(2)
+                              ],
+                              onChanged: (value) {
+                                expMon = value;
+                              },
+                              decoration: InputDecoration(
+
+                                hintText: "Exp Mon",
+                                hintStyle: TextStyle(color: Colors.black),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(width: 1.5),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(1.0))),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 100,
+                            child: TextField(
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                  height:
+                                  MediaQuery.of(context).size.height * .0012 ),
+
+                              controller: expyTextController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                LengthLimitingTextInputFormatter(2)
+                              ],
+                              onChanged: (value) {
+                                expYear = value;
+                              },
+                              decoration: InputDecoration(
+
+                                hintText: "Exp Year",
+                                hintStyle: TextStyle(color: Colors.black),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(width: 1.5),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(1.0))),
+                              ),
+                            ),
+                          ),
+                        ]),
+
                         SizedBox(
                           height: MediaQuery.of(context).size.height * .01,
                         ),
@@ -296,9 +398,41 @@ class PayScreen extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * .06,
+                          height: MediaQuery.of(context).size.height * .005,
                         ),
-                        Text("Once you pay you can leave any internet connection to complete the scavenger hunt",
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical:
+                              MediaQuery.of(context).size.width * .01),
+                          child: Material(
+                            elevation: 5.0,
+                            color: Colors.blue[1000],
+                            borderRadius: BorderRadius.circular(60.0),
+                            child: MaterialButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LeaderBoard()));
+                              },
+                              minWidth: 200.0,
+                              height: 42.0,
+                              child: Text(
+                                'Leaderboard',
+                                style: TextStyle(
+                                  fontSize:
+                                  .06 * MediaQuery.of(context).size.width,
+                                  fontFamily: font,
+                                  color: Colors.red[200],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * .05,
+                        ),
+                        Text("Once you pay you can leave internet connection to complete the scavenger hunt",
                           style: TextStyle(color: Colors.black, fontSize: 15), textAlign: TextAlign.center,)
                       ],
                     ),

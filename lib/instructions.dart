@@ -50,7 +50,7 @@ class Instructions extends StatelessWidget {
                   '1. Choose a challenge',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: .05 * MediaQuery.of(context).size.width,
+                    fontSize: .045 * MediaQuery.of(context).size.width,
                     height: 1.5,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
@@ -69,7 +69,7 @@ class Instructions extends StatelessWidget {
                       'with your card on file',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: .05 * MediaQuery.of(context).size.width,
+                    fontSize: .045 * MediaQuery.of(context).size.width,
                     height: 1.5,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
@@ -87,7 +87,7 @@ class Instructions extends StatelessWidget {
                   '3. Using a phone with a working camera answer the questions',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: .05 * MediaQuery.of(context).size.width,
+                    fontSize: .045 * MediaQuery.of(context).size.width,
                     height: 1.5,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
@@ -105,7 +105,7 @@ class Instructions extends StatelessWidget {
                   '4. Stay with your team',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: .05 * MediaQuery.of(context).size.width,
+                    fontSize: .045 * MediaQuery.of(context).size.width,
                     height: 1.5,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
@@ -124,7 +124,7 @@ class Instructions extends StatelessWidget {
                       ' wins',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: .05 * MediaQuery.of(context).size.width,
+                    fontSize: .045 * MediaQuery.of(context).size.width,
                     height: 1.5,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
@@ -142,7 +142,7 @@ class Instructions extends StatelessWidget {
                   'Be Safe!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: .05 * MediaQuery.of(context).size.width,
+                    fontSize: .045 * MediaQuery.of(context).size.width,
                     height: 1.5,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
