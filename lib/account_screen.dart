@@ -386,6 +386,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         _showMyDialog("Password and Verify Password do not match");
                       }else if(!checkedValue){
                         _showMyDialog("You must accept the privacy policy below");
+                      }else if(teamName.length == 0){
+                        _showMyDialog("Please enter your team name");
                       }else{
                         registerAccount(
                             context,

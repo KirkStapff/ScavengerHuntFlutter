@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kirk_app/challenge_selector.dart';
 import 'package:kirk_app/login_screen.dart';
+import 'package:kirk_app/pay_finished.dart';
 import 'package:kirk_app/storage.dart';
 import 'package:kirk_app/style_constants.dart';
 import 'package:http/http.dart' as http;
@@ -105,8 +106,7 @@ class PayScreen extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  QuestionScreen(
-                      questions: questions)),
+                  PayFinised(questions)),
         );
       } else {
         alert(context, "Credit Card Processing Error, Please try again later");
@@ -130,36 +130,6 @@ class PayScreen extends StatelessWidget {
       }
 
       return list;
-    }
-
-    Future setFinished() async {
-      var client = HttpClient(context: LoginScreen.sec_context);
-      client.badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-
-      // The rest of this code comes from your question.
-      var uri = "https://tlfbermuda.com/setpaid.php";
-
-      const Base64Codec base64 = Base64Codec();
-      const Latin1Codec latin1 = Latin1Codec();
-      var appKey = '[' +
-          ChallengeSelector.challengeN.toString() +
-          ',' +
-          LoginScreen.account_id +
-          ',2]';
-      print(appKey);
-      //var bytes = latin1.encode(appKey);
-      //appKey = base64.encode(bytes);
-      var method = 'POST';
-
-      var request = await client.openUrl(method, Uri.parse(uri));
-      request.headers.contentLength = 0;
-      request.headers.set(HttpHeaders.authorizationHeader, appKey);
-      //request.write(data);
-      var response = await request.close();
-      var textBack = new List<int>();
-      textBack.addAll(await response.first);
-      print(latin1.decode(textBack));
     }
 
     return Scaffold(
@@ -440,38 +410,5 @@ class PayScreen extends StatelessWidget {
                 );
               }
             }));
-  }
-
-  static Future setPaidState(int state) async {
-    var client = HttpClient(context: LoginScreen.sec_context);
-    client.badCertificateCallback =
-        (X509Certificate cert, String host, int port) => true;
-
-    // The rest of this code comes from your question.
-    var uri = "https://tlfbermuda.com/setpaid.php";
-
-    const Base64Codec base64 = Base64Codec();
-    const Latin1Codec latin1 = Latin1Codec();
-    print(state.toString());
-    var appKey = '[' +
-        ChallengeSelector.challengeN.toString() +
-        ',' +
-        LoginScreen.account_id +
-        ',' +
-        state.toString() +
-        ']';
-    print(appKey);
-    //var bytes = latin1.encode(appKey);
-    //appKey = base64.encode(bytes);
-    var method = 'POST';
-
-    var request = await client.openUrl(method, Uri.parse(uri));
-    request.headers.contentLength = 0;
-    request.headers.set(HttpHeaders.authorizationHeader, appKey);
-    //request.write(data);
-    var response = await request.close();
-    var textBack = new List<int>();
-    textBack.addAll(await response.first);
-    print(latin1.decode(textBack));
   }
 }

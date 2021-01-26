@@ -203,7 +203,7 @@ class ChallengeSelector extends StatelessWidget {
                                       )),
                                 ]),
                             SizedBox(
-                              height: MediaQuery.of(context).size.height * .16,
+                              height: MediaQuery.of(context).size.height * .08,
                             ),
                             Align(
                                 alignment: Alignment.bottomCenter,
@@ -271,10 +271,31 @@ class ChallengeSelector extends StatelessWidget {
                                       ),
                                     ]),
                                   ),
-                                  SizedBox(
-                                    height: MediaQuery.of(context).size.height * .02,
-                                  ),
-                                ],)),
+                                    SizedBox(height: 0.02*MediaQuery.of(context).size.height),
+                                    Material(
+                                      elevation: 5.0,
+                                      color: Colors.blue[1000],
+                                      borderRadius: BorderRadius.circular(60.0),
+                                      child: MaterialButton(
+                                        onPressed: () {
+                                          relog(context);
+                                          Navigator.of(context)
+                                              .push(MaterialPageRoute(builder: (context) {
+                                            return EditAccountScreen();
+                                          }));
+                                        },
+                                        minWidth: MediaQuery.of(context).size.width * .23,
+                                        height: MediaQuery.of(context).size.height * .05,
+                                        child: Text("Log out",
+                                          style: TextStyle(
+                                            fontSize: .05 * MediaQuery.of(context).size.width,
+                                            fontFamily: font,
+                                            color: Colors.red[200],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],)),
                           ],
                         );
                       }
